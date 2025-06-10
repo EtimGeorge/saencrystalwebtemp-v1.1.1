@@ -1,0 +1,1438 @@
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Admin Panel - Brand Management</title>
+    <script src="https://www.gstatic.com/firebasejs/9.6.1/firebase-app-compat.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/9.6.1/firebase-auth-compat.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/9.6.1/firebase-firestore-compat.js"></script>
+    <link rel="stylesheet" href="assets/css/admin-style.css">
+    <link rel="stylesheet" href="assets/css/theme.css"> <!-- Optional: if admin panel uses site themes -->
+</head>
+<body>
+    <header>
+        <h1>Website Content & Branding Admin</h1>
+    </header>
+
+    <main>
+        <div id="auth-container">
+            <div id="auth-loading" class="spinner-container">
+                <div class="spinner"></div>
+                <p>Checking authentication status...</p>
+            </div>
+
+            <form id="loginForm" style="display:none;">
+                <h2>Admin Login</h2>
+                <div id="authError" class="error-message" style="display:none;"></div>
+                <div class="form-group">
+                    <label for="emailInput">Email:</label>
+                    <input type="email" id="emailInput" required>
+                </div>
+                <div class="form-group">
+                    <label for="passwordInput">Password:</label>
+                    <input type="password" id="passwordInput" required>
+                </div>
+                <button type="submit" id="loginButton">Login</button>
+                <button type="button" id="signupButton">Sign Up</button>
+            </form>
+
+            <div id="userInfo" style="display:none;">
+                <p>Logged in as: <span id="userEmail"></span></p>
+                <button id="logoutButton" class="button-danger">Logout</button>
+            </div>
+        </div>
+
+        <div id="admin-content-form" style="display:none;">
+            <div id="adminStatusMessage" class="status-message" style="display:none;"></div>
+            <form id="contentManagementForm">
+
+                <fieldset class="form-section">
+                    <legend>General Settings</legend>
+                    <div class="form-group">
+                        <label for="adminCompanyName">Company Name:</label>
+                        <input type="text" id="adminCompanyName" name="companyName">
+                    </div>
+                    <div class="form-group">
+                        <label for="adminCompanyNiche">Company Niche/Industry (for AI context):</label>
+                        <input type="text" id="adminCompanyNiche" name="companyNiche" placeholder="e.g., SaaS, Healthcare Technology, Eco-friendly Retail">
+                    </div>
+                    <div class="form-group textarea-group">
+                        <label for="adminTagline">Tagline:</label>
+                        <textarea id="adminTagline" name="tagline" class="ai-target-textarea" data-ai-field-type="tagline"></textarea>
+                        <button type="button" class="ai-suggest-btn">Suggest with AI ✨</button>
+                    </div>
+                    <div class="form-group">
+                        <label for="adminLogoUrl">Logo URL (e.g., assets/images/logo.png):</label>
+                        <input type="text" id="adminLogoUrl" name="logoUrl">
+                    </div>
+                </fieldset>
+
+                <fieldset class="form-section">
+                    <legend>Contact Details</legend>
+                    <div class="form-group">
+                        <label for="adminContactEmail">Email:</label>
+                        <input type="email" id="adminContactEmail" name="contactEmail">
+                    </div>
+                    <div class="form-group">
+                        <label for="adminContactPhone">Phone:</label>
+                        <input type="tel" id="adminContactPhone" name="contactPhone">
+                    </div>
+                    <div class="form-group textarea-group">
+                        <label for="adminContactAddress">Address:</label>
+                        <textarea id="adminContactAddress" name="contactAddress" class="ai-target-textarea" data-ai-field-type="contactAddress"></textarea>
+                        <button type="button" class="ai-suggest-btn">Suggest with AI ✨</button>
+                    </div>
+                </fieldset>
+
+                <fieldset class="form-section">
+                    <legend>Social Media Links</legend>
+                    <div id="socialLinksContainer" class="dynamic-list-container">
+                        <!-- Social media links will be added here -->
+                    </div>
+                    <button type="button" id="addSocialLinkButton" class="button-add-item">Add Social Media Link</button>
+                    <template id="socialLinkTemplate">
+                        <div class="dynamic-list-item repeating-group-item">
+                            <div class="form-group">
+                                <label>Platform Name (e.g., Twitter, LinkedIn):</label>
+                                <input type="text" class="social-platform-input" name="socialPlatform">
+                            </div>
+                            <div class="form-group">
+                                <label>URL:</label>
+                                <input type="url" class="social-url-input" name="socialUrl">
+                            </div>
+                            <button type="button" class="remove-item-btn button-danger">Remove</button>
+                        </div>
+                    </template>
+                </fieldset>
+
+                <fieldset class="form-section">
+                    <legend>Theme Customization</legend>
+                    <div class="form-group">
+                        <label for="adminThemePrimaryColor">Primary Color:</label>
+                        <input type="color" id="adminThemePrimaryColor" name="themePrimaryColor" value="#3498DB">
+                    </div>
+                    <div class="form-group">
+                        <label for="adminThemeSecondaryColor">Secondary Color:</label>
+                        <input type="color" id="adminThemeSecondaryColor" name="themeSecondaryColor" value="#95A5A6">
+                    </div>
+                    <div class="form-group">
+                        <label for="adminThemeAccentColor">Accent Color:</label>
+                        <input type="color" id="adminThemeAccentColor" name="themeAccentColor" value="#1ABC9C">
+                    </div>
+                </fieldset>
+
+                <fieldset class="form-section">
+                    <legend>Home Page Content</legend>
+                    <fieldset>
+                        <legend>Hero Section</legend>
+                        <div class="form-group section-visibility-toggle">
+                            <label><input type="checkbox" class="section-visible-checkbox" data-section-name="hero" checked> Show this section on the public site?</label>
+                        </div>
+                        <div class="form-group">
+                            <label for="adminHomeHeroTitle">Hero Title:</label>
+                            <input type="text" id="adminHomeHeroTitle" name="homeHeroTitle">
+                        </div>
+                        <div class="form-group textarea-group">
+                            <label for="adminHomeHeroSubtitle">Hero Subtitle:</label>
+                            <textarea id="adminHomeHeroSubtitle" name="homeHeroSubtitle" class="ai-target-textarea" data-ai-field-type="heroSubtitle"></textarea>
+                            <button type="button" class="ai-suggest-btn">Suggest with AI ✨</button>
+                        </div>
+                        <div class="form-group">
+                            <label for="adminHomeHeroImage">Hero Image URL:</label>
+                            <input type="url" id="adminHomeHeroImage" name="homeHeroImage">
+                        </div>
+                        <div class="form-group">
+                            <label for="adminHomeHeroCtaText">Hero CTA Button Text:</label>
+                            <input type="text" id="adminHomeHeroCtaText" name="homeHeroCtaText">
+                        </div>
+                        <div class="form-group">
+                            <label for="adminHomeHeroCtaLink">Hero CTA Button Link:</label>
+                            <input type="url" id="adminHomeHeroCtaLink" name="homeHeroCtaLink">
+                        </div>
+                    </fieldset>
+                    <fieldset>
+                        <legend>Introduction Section</legend>
+                        <div class="form-group section-visibility-toggle">
+                            <label><input type="checkbox" class="section-visible-checkbox" data-section-name="introduction" checked> Show this section on the public site?</label>
+                        </div>
+                        <div class="form-group">
+                            <label for="adminHomeIntroTitle">Intro Title:</label>
+                            <input type="text" id="adminHomeIntroTitle" name="homeIntroTitle">
+                        </div>
+                        <div class="form-group textarea-group">
+                            <label for="adminHomeIntroText">Intro Text:</label>
+                            <textarea id="adminHomeIntroText" name="homeIntroText" class="ai-target-textarea" data-ai-field-type="homeIntroText"></textarea>
+                            <button type="button" class="ai-suggest-btn">Suggest with AI ✨</button>
+                        </div>
+                        <div class="form-group">
+                            <label for="adminHomeIntroImage">Intro Image URL:</label>
+                            <input type="url" id="adminHomeIntroImage" name="homeIntroImage">
+                        </div>
+                        <div class="form-group">
+                            <label for="adminHomeIntroImageAlt">Intro Image Alt Text:</label>
+                            <input type="text" id="adminHomeIntroImageAlt" name="homeIntroImageAlt">
+                        </div>
+                    </fieldset>
+                     <fieldset>
+                        <legend>Featured Services Section</legend>
+                        <div class="form-group section-visibility-toggle">
+                            <label><input type="checkbox" class="section-visible-checkbox" data-section-name="featuredServices" checked> Show this section on the public site?</label>
+                        </div>
+                        <div class="form-group">
+                            <label for="adminHomeFeaturedServicesTitle">Section Title:</label>
+                            <input type="text" id="adminHomeFeaturedServicesTitle" name="homeFeaturedServicesTitle">
+                        </div>
+                        <div class="form-group textarea-group">
+                            <label for="adminHomeFeaturedServicesIntro">Intro Text:</label>
+                            <textarea id="adminHomeFeaturedServicesIntro" name="homeFeaturedServicesIntro" class="ai-target-textarea" data-ai-field-type="homeFeaturedServicesIntro"></textarea>
+                            <button type="button" class="ai-suggest-btn">Suggest with AI ✨</button>
+                        </div>
+                        <p class="admin-note">Note: Actual services are managed in the "Services Page" section. This is just for the homepage display.</p>
+                    </fieldset>
+                    <fieldset>
+                        <legend>Key Features (Bento Grid)</legend>
+                        <div class="form-group section-visibility-toggle">
+                            <label><input type="checkbox" class="section-visible-checkbox" data-section-name="keyFeatures" checked> Show this section on the public site?</label>
+                        </div>
+                        <div class="form-group">
+                            <label for="adminHomeKeyFeaturesTitle">Section Title:</label>
+                            <input type="text" id="adminHomeKeyFeaturesTitle" name="homeKeyFeaturesTitle">
+                        </div>
+                        <div id="keyFeaturesContainer" class="dynamic-list-container">
+                            <!-- Key feature items will be added here -->
+                        </div>
+                        <button type="button" id="addKeyFeatureButton" class="button-add-item">Add Key Feature</button>
+                        <template id="keyFeatureTemplate">
+                            <div class="dynamic-list-item repeating-group-item">
+                                <h4>Key Feature Item</h4>
+                                <div class="form-group">
+                                    <label>ID (Unique identifier, e.g., kf1, kf-main):</label>
+                                    <input type="text" class="keyfeature-id-input" name="keyFeatureId">
+                                </div>
+                                <div class="form-group">
+                                    <label>Title:</label>
+                                    <input type="text" class="keyfeature-title-input" name="keyFeatureTitle">
+                                </div>
+                                <div class="form-group textarea-group">
+                                    <label>Description:</label>
+                                    <textarea class="keyfeature-description-input ai-target-textarea" name="keyFeatureDescription" data-ai-field-type="keyFeatureDescription"></textarea>
+                                    <button type="button" class="ai-suggest-btn">Suggest with AI ✨</button>
+                                </div>
+                                <div class="form-group">
+                                    <label>Icon Placeholder (e.g., emoji or shortcode):</label>
+                                    <input type="text" class="keyfeature-icon-input" name="keyFeatureIcon">
+                                </div>
+                                <div class="form-group">
+                                    <label>Layout (for Bento Grid):</label>
+                                    <select class="keyfeature-layout-select" name="keyFeatureLayout">
+                                        <option value="1x1">1x1</option>
+                                        <option value="2x2">2x2</option>
+                                    </select>
+                                </div>
+                                <div class="form-group">
+                                    <label><input type="checkbox" class="keyfeature-isimage-checkbox" name="keyFeatureIsImage"> Is this an image block?</label>
+                                </div>
+                                <div class="form-group">
+                                    <label>Image Source URL (if image block):</label>
+                                    <input type="url" class="keyfeature-imagesrc-input" name="keyFeatureImageSrc">
+                                </div>
+                                 <div class="form-group">
+                                    <label>Image Alt Text (if image block):</label>
+                                    <input type="text" class="keyfeature-imagealt-input" name="keyFeatureImageAlt">
+                                </div>
+                                <button type="button" class="remove-item-btn button-danger">Remove Feature</button>
+                            </div>
+                        </template>
+                    </fieldset>
+                    <fieldset>
+                        <legend>Call to Action Bar</legend>
+                        <div class="form-group section-visibility-toggle">
+                            <label><input type="checkbox" class="section-visible-checkbox" data-section-name="ctaBar" checked> Show this section on the public site?</label>
+                        </div>
+                        <div class="form-group">
+                            <label for="adminHomeCtaBarTitle">Title:</label>
+                            <input type="text" id="adminHomeCtaBarTitle" name="homeCtaBarTitle">
+                        </div>
+                        <div class="form-group textarea-group">
+                            <label for="adminHomeCtaBarText">Text:</label>
+                            <textarea id="adminHomeCtaBarText" name="homeCtaBarText" class="ai-target-textarea" data-ai-field-type="ctaBarText"></textarea>
+                            <button type="button" class="ai-suggest-btn">Suggest with AI ✨</button>
+                        </div>
+                        <div class="form-group">
+                            <label for="adminHomeCtaBarButtonText">Button Text:</label>
+                            <input type="text" id="adminHomeCtaBarButtonText" name="homeCtaBarButtonText">
+                        </div>
+                        <div class="form-group">
+                            <label for="adminHomeCtaBarButtonLink">Button Link:</label>
+                            <input type="url" id="adminHomeCtaBarButtonLink" name="homeCtaBarButtonLink">
+                        </div>
+                    </fieldset>
+                    <fieldset>
+                        <legend>About Us Teaser</legend>
+                        <div class="form-group section-visibility-toggle">
+                            <label><input type="checkbox" class="section-visible-checkbox" data-section-name="aboutTeaser" checked> Show this section on the public site?</label>
+                        </div>
+                        <div class="form-group">
+                            <label for="adminHomeAboutTeaserTitle">Title:</label>
+                            <input type="text" id="adminHomeAboutTeaserTitle" name="homeAboutTeaserTitle">
+                        </div>
+                        <div class="form-group textarea-group">
+                            <label for="adminHomeAboutTeaserText">Text:</label>
+                            <textarea id="adminHomeAboutTeaserText" name="homeAboutTeaserText" class="ai-target-textarea" data-ai-field-type="homeAboutTeaserText"></textarea>
+                            <button type="button" class="ai-suggest-btn">Suggest with AI ✨</button>
+                        </div>
+                        <div class="form-group">
+                            <label for="adminHomeAboutTeaserImageSrc">Image URL:</label>
+                            <input type="url" id="adminHomeAboutTeaserImageSrc" name="homeAboutTeaserImageSrc">
+                        </div>
+                         <div class="form-group">
+                            <label for="adminHomeAboutTeaserImageAlt">Image Alt Text:</label>
+                            <input type="text" id="adminHomeAboutTeaserImageAlt" name="homeAboutTeaserImageAlt">
+                        </div>
+                        <div class="form-group">
+                            <label for="adminHomeAboutTeaserButtonText">Button Text:</label>
+                            <input type="text" id="adminHomeAboutTeaserButtonText" name="homeAboutTeaserButtonText">
+                        </div>
+                        <div class="form-group">
+                            <label for="adminHomeAboutTeaserButtonLink">Button Link:</label>
+                            <input type="url" id="adminHomeAboutTeaserButtonLink" name="homeAboutTeaserButtonLink">
+                        </div>
+                    </fieldset>
+                    <fieldset>
+                        <legend>Testimonials</legend>
+                        <div class="form-group section-visibility-toggle">
+                            <label><input type="checkbox" class="section-visible-checkbox" data-section-name="testimonials" checked> Show this section on the public site?</label>
+                        </div>
+                         <div class="form-group">
+                            <label for="adminHomeTestimonialsTitle">Section Title:</label>
+                            <input type="text" id="adminHomeTestimonialsTitle" name="homeTestimonialsTitle">
+                        </div>
+                        <div id="testimonialsContainer" class="dynamic-list-container">
+                            <!-- Testimonial items will be added here -->
+                        </div>
+                        <button type="button" id="addTestimonialButton" class="button-add-item">Add Testimonial</button>
+                        <template id="testimonialTemplate">
+                            <div class="dynamic-list-item repeating-group-item">
+                                <h4>Testimonial</h4>
+                                <div class="form-group textarea-group">
+                                    <label>Quote:</label>
+                                    <textarea class="testimonial-quote-input ai-target-textarea" name="testimonialQuote" data-ai-field-type="testimonialQuote"></textarea>
+                                    <button type="button" class="ai-suggest-btn">Suggest with AI ✨</button>
+                                </div>
+                                <div class="form-group">
+                                    <label>Author:</label>
+                                    <input type="text" class="testimonial-author-input" name="testimonialAuthor">
+                                </div>
+                                <div class="form-group">
+                                    <label>Company (Optional):</label>
+                                    <input type="text" class="testimonial-company-input" name="testimonialCompany">
+                                </div>
+                                <button type="button" class="remove-item-btn button-danger">Remove Testimonial</button>
+                            </div>
+                        </template>
+                    </fieldset>
+                    <fieldset>
+                        <legend>Latest Blog Posts Teaser</legend>
+                        <div class="form-group section-visibility-toggle">
+                            <label><input type="checkbox" class="section-visible-checkbox" data-section-name="blogTeaser" checked> Show this section on the public site?</label>
+                        </div>
+                        <div class="form-group">
+                            <label for="adminHomeBlogTeaserTitle">Section Title:</label>
+                            <input type="text" id="adminHomeBlogTeaserTitle" name="homeBlogTeaserTitle">
+                        </div>
+                        <div class="form-group">
+                            <label for="adminHomeBlogTeaserNumPosts">Number of Posts to Show:</label>
+                            <input type="number" id="adminHomeBlogTeaserNumPosts" name="homeBlogTeaserNumPosts" min="1" max="5" value="3">
+                        </div>
+                        <div class="form-group">
+                            <label for="adminHomeBlogTeaserViewAllText">"View All" Button Text:</label>
+                            <input type="text" id="adminHomeBlogTeaserViewAllText" name="homeBlogTeaserViewAllText">
+                        </div>
+                         <p class="admin-note">Note: Actual blog posts are managed in the "Blog Page" section. This teaser will show the most recent ones.</p>
+                    </fieldset>
+                </fieldset>
+
+                <fieldset class="form-section">
+                    <legend>About Page Content</legend>
+                     <fieldset>
+                        <legend>Hero Section</legend>
+                        <div class="form-group section-visibility-toggle">
+                            <label><input type="checkbox" class="section-visible-checkbox" data-section-name="hero" checked> Show this section on the public site?</label>
+                        </div>
+                        <div class="form-group">
+                            <label for="adminAboutHeroTitle">Hero Title:</label>
+                            <input type="text" id="adminAboutHeroTitle" name="aboutHeroTitle">
+                        </div>
+                        <div class="form-group textarea-group">
+                            <label for="adminAboutHeroSubtitle">Hero Subtitle:</label>
+                            <textarea id="adminAboutHeroSubtitle" name="aboutHeroSubtitle" class="ai-target-textarea" data-ai-field-type="aboutHeroSubtitle"></textarea>
+                            <button type="button" class="ai-suggest-btn">Suggest with AI ✨</button>
+                        </div>
+                        <div class="form-group">
+                            <label for="adminAboutHeroImage">Hero Image URL:</label>
+                            <input type="url" id="adminAboutHeroImage" name="aboutHeroImage">
+                        </div>
+                    </fieldset>
+                    <fieldset>
+                        <legend>Our Story Section</legend>
+                        <div class="form-group section-visibility-toggle">
+                            <label><input type="checkbox" class="section-visible-checkbox" data-section-name="ourStory" checked> Show this section on the public site?</label>
+                        </div>
+                        <div class="form-group">
+                            <label for="adminAboutStoryTitle">Section Title:</label>
+                            <input type="text" id="adminAboutStoryTitle" name="aboutStoryTitle">
+                        </div>
+                        <div id="storyBlocksContainer" class="dynamic-list-container">
+                            <!-- Story blocks will be added here -->
+                        </div>
+                        <button type="button" id="addStoryBlockButton" class="button-add-item">Add Story Block</button>
+                        <template id="storyBlockTemplate">
+                            <div class="dynamic-list-item repeating-group-item">
+                                <h4>Story Block</h4>
+                                <div class="form-group textarea-group">
+                                    <label>Text:</label>
+                                    <textarea class="storyblock-text-input ai-target-textarea" name="storyBlockText" data-ai-field-type="storyBlockText"></textarea>
+                                    <button type="button" class="ai-suggest-btn">Suggest with AI ✨</button>
+                                </div>
+                                <div class="form-group">
+                                    <label>Image URL:</label>
+                                    <input type="url" class="storyblock-image-input" name="storyBlockImage">
+                                </div>
+                                <div class="form-group">
+                                    <label>Image Alt Text:</label>
+                                    <input type="text" class="storyblock-imagealt-input" name="storyBlockImageAlt">
+                                </div>
+                                <button type="button" class="remove-item-btn button-danger">Remove Block</button>
+                            </div>
+                        </template>
+                    </fieldset>
+                    <fieldset>
+                        <legend>Team Section</legend>
+                        <div class="form-group section-visibility-toggle">
+                            <label><input type="checkbox" class="section-visible-checkbox" data-section-name="team" checked> Show this section on the public site?</label>
+                        </div>
+                        <div class="form-group">
+                            <label for="adminAboutTeamTitle">Section Title:</label>
+                            <input type="text" id="adminAboutTeamTitle" name="aboutTeamTitle">
+                        </div>
+                        <div class="form-group textarea-group">
+                            <label for="adminAboutTeamIntro">Intro Text:</label>
+                            <textarea id="adminAboutTeamIntro" name="aboutTeamIntro" class="ai-target-textarea" data-ai-field-type="teamIntro"></textarea>
+                            <button type="button" class="ai-suggest-btn">Suggest with AI ✨</button>
+                        </div>
+                        <div id="teamMembersContainer" class="dynamic-list-container">
+                            <!-- Team members will be added here -->
+                        </div>
+                        <button type="button" id="addTeamMemberButton" class="button-add-item">Add Team Member</button>
+                        <template id="teamMemberTemplate">
+                            <div class="dynamic-list-item repeating-group-item">
+                                <h4>Team Member</h4>
+                                <div class="form-group">
+                                    <label>Name:</label>
+                                    <input type="text" class="teammember-name-input" name="teamMemberName">
+                                </div>
+                                <div class="form-group">
+                                    <label>Title/Role:</label>
+                                    <input type="text" class="teammember-title-input" name="teamMemberTitle">
+                                </div>
+                                <div class="form-group">
+                                    <label>Image URL:</label>
+                                    <input type="url" class="teammember-image-input" name="teamMemberImage">
+                                </div>
+                                <div class="form-group textarea-group">
+                                    <label>Bio:</label>
+                                    <textarea class="teammember-bio-input ai-target-textarea" name="teamMemberBio" data-ai-field-type="teamMemberBio"></textarea>
+                                    <button type="button" class="ai-suggest-btn">Suggest with AI ✨</button>
+                                </div>
+                                <div class="form-group">
+                                    <label>Social Links (one per line, e.g., LinkedIn: url):</label>
+                                    <textarea class="teammember-social-input" name="teamMemberSocial" placeholder="LinkedIn: https://linkedin.com/in/example\nTwitter: https://twitter.com/example"></textarea>
+                                </div>
+                                <button type="button" class="remove-item-btn button-danger">Remove Member</button>
+                            </div>
+                        </template>
+                    </fieldset>
+                     <fieldset>
+                        <legend>Our Values Section</legend>
+                        <div class="form-group section-visibility-toggle">
+                            <label><input type="checkbox" class="section-visible-checkbox" data-section-name="values" checked> Show this section on the public site?</label>
+                        </div>
+                        <div class="form-group">
+                            <label for="adminAboutValuesTitle">Section Title:</label>
+                            <input type="text" id="adminAboutValuesTitle" name="aboutValuesTitle">
+                        </div>
+                        <div class="form-group textarea-group">
+                            <label for="adminAboutValuesIntro">Intro Text:</label>
+                            <textarea id="adminAboutValuesIntro" name="aboutValuesIntro" class="ai-target-textarea" data-ai-field-type="valuesIntro"></textarea>
+                            <button type="button" class="ai-suggest-btn">Suggest with AI ✨</button>
+                        </div>
+                        <div id="valuesListContainer" class="dynamic-list-container">
+                            <!-- Values will be added here -->
+                        </div>
+                        <button type="button" id="addValueButton" class="button-add-item">Add Value</button>
+                        <template id="valueItemTemplate">
+                            <div class="dynamic-list-item repeating-group-item">
+                                <h4>Value</h4>
+                                <div class="form-group">
+                                    <label>Name:</label>
+                                    <input type="text" class="value-name-input" name="valueName">
+                                </div>
+                                <div class="form-group textarea-group">
+                                    <label>Description:</label>
+                                    <textarea class="value-description-input ai-target-textarea" name="valueDescription" data-ai-field-type="valueDescription"></textarea>
+                                    <button type="button" class="ai-suggest-btn">Suggest with AI ✨</button>
+                                </div>
+                                <div class="form-group">
+                                    <label>Icon Placeholder:</label>
+                                    <input type="text" class="value-icon-input" name="valueIcon">
+                                </div>
+                                <button type="button" class="remove-item-btn button-danger">Remove Value</button>
+                            </div>
+                        </template>
+                    </fieldset>
+                    <fieldset>
+                        <legend>Mission & Vision Section</legend>
+                        <div class="form-group section-visibility-toggle">
+                            <label><input type="checkbox" class="section-visible-checkbox" data-section-name="missionVision" checked> Show this section on the public site?</label>
+                        </div>
+                        <div class="form-group">
+                            <label for="adminAboutMissionVisionSectionTitle">Overall Section Title:</label>
+                            <input type="text" id="adminAboutMissionVisionSectionTitle" name="aboutMissionVisionSectionTitle" value="Our Mission & Vision">
+                        </div>
+                        <div class="form-group">
+                            <label for="adminAboutMissionTitle">Mission Title:</label>
+                            <input type="text" id="adminAboutMissionTitle" name="aboutMissionTitle" value="Our Mission">
+                        </div>
+                        <div class="form-group textarea-group">
+                            <label for="adminAboutMissionText">Mission Text:</label>
+                            <textarea id="adminAboutMissionText" name="aboutMissionText" class="ai-target-textarea" data-ai-field-type="aboutMissionText"></textarea>
+                            <button type="button" class="ai-suggest-btn">Suggest with AI ✨</button>
+                        </div>
+                        <div class="form-group">
+                            <label for="adminAboutVisionTitle">Vision Title:</label>
+                            <input type="text" id="adminAboutVisionTitle" name="aboutVisionTitle" value="Our Vision">
+                        </div>
+                        <div class="form-group textarea-group">
+                            <label for="adminAboutVisionText">Vision Text:</label>
+                            <textarea id="adminAboutVisionText" name="aboutVisionText" class="ai-target-textarea" data-ai-field-type="aboutVisionText"></textarea>
+                            <button type="button" class="ai-suggest-btn">Suggest with AI ✨</button>
+                        </div>
+                    </fieldset>
+                    <fieldset>
+                        <legend>Company Culture Section</legend>
+                        <div class="form-group section-visibility-toggle">
+                            <label><input type="checkbox" class="section-visible-checkbox" data-section-name="companyCulture" checked> Show this section on the public site?</label>
+                        </div>
+                        <div class="form-group">
+                            <label for="adminAboutCultureSectionTitle">Section Title:</label>
+                            <input type="text" id="adminAboutCultureSectionTitle" name="aboutCultureSectionTitle" value="Our Culture">
+                        </div>
+                        <div class="form-group textarea-group">
+                            <label for="adminAboutCultureMainText">Main Text:</label>
+                            <textarea id="adminAboutCultureMainText" name="aboutCultureMainText" class="ai-target-textarea" data-ai-field-type="aboutCultureMainText"></textarea>
+                            <button type="button" class="ai-suggest-btn">Suggest with AI ✨</button>
+                        </div>
+                        <div class="form-group">
+                            <label for="adminAboutCultureImage">Image URL:</label>
+                            <input type="url" id="adminAboutCultureImage" name="aboutCultureImage">
+                        </div>
+                        <div class="form-group">
+                            <label for="adminAboutCultureImageAlt">Image Alt Text:</label>
+                            <input type="text" id="adminAboutCultureImageAlt" name="aboutCultureImageAlt">
+                        </div>
+                    </fieldset>
+                    <fieldset>
+                        <legend>Community Involvement & CSR Section</legend>
+                        <div class="form-group section-visibility-toggle">
+                            <label><input type="checkbox" class="section-visible-checkbox" data-section-name="communityInvolvement" checked> Show this section on the public site?</label>
+                        </div>
+                        <div class="form-group">
+                            <label for="adminAboutCommunitySectionTitle">Section Title:</label>
+                            <input type="text" id="adminAboutCommunitySectionTitle" name="aboutCommunitySectionTitle" value="Community Involvement & CSR">
+                        </div>
+                        <div class="form-group textarea-group">
+                            <label for="adminAboutCommunityMainText">Main Text:</label>
+                            <textarea id="adminAboutCommunityMainText" name="aboutCommunityMainText" class="ai-target-textarea" data-ai-field-type="aboutCommunityMainText"></textarea>
+                            <button type="button" class="ai-suggest-btn">Suggest with AI ✨</button>
+                        </div>
+                        <div id="communityInvolvementItemsContainer" class="dynamic-list-container">
+                            <!-- Community Involvement Items will be added here -->
+                        </div>
+                        <button type="button" id="addCommunityInvolvementItemButton" class="button-add-item">Add Involvement Item</button>
+                        <template id="communityInvolvementItemTemplate">
+                            <div class="dynamic-list-item repeating-group-item">
+                                <div class="form-group">
+                                    <label>Involvement Item Text:</label>
+                                    <input type="text" class="community-involvement-item-text-input" name="communityInvolvementItemText">
+                                </div>
+                                <button type="button" class="remove-item-btn button-danger">Remove Item</button>
+                            </div>
+                        </template>
+                    </fieldset>
+                    <fieldset>
+                        <legend>Careers Teaser Section</legend>
+                        <div class="form-group section-visibility-toggle">
+                            <label><input type="checkbox" class="section-visible-checkbox" data-section-name="careersTeaser" checked> Show this section on the public site?</label>
+                        </div>
+                        <div class="form-group">
+                            <label for="adminAboutCareersSectionTitle">Section Title:</label>
+                            <input type="text" id="adminAboutCareersSectionTitle" name="aboutCareersSectionTitle" value="Join Our Team">
+                        </div>
+                        <div class="form-group textarea-group">
+                            <label for="adminAboutCareersMainText">Main Text:</label>
+                            <textarea id="adminAboutCareersMainText" name="aboutCareersMainText" class="ai-target-textarea" data-ai-field-type="aboutCareersMainText"></textarea>
+                            <button type="button" class="ai-suggest-btn">Suggest with AI ✨</button>
+                        </div>
+                        <div class="form-group">
+                            <label for="adminAboutCareersButtonText">Button Text:</label>
+                            <input type="text" id="adminAboutCareersButtonText" name="aboutCareersButtonText" value="Explore Careers">
+                        </div>
+                        <div class="form-group">
+                            <label for="adminAboutCareersButtonLink">Button Link (e.g., contact.html?subject=Careers):</label>
+                            <input type="url" id="adminAboutCareersButtonLink" name="aboutCareersButtonLink">
+                        </div>
+                    </fieldset>
+                    <div class="form-group textarea-group">
+                        <label for="adminAboutMetaDesc">Meta Description:</label>
+                        <textarea id="adminAboutMetaDesc" name="aboutMetaDesc" class="ai-target-textarea" data-ai-field-type="metaDescription"></textarea>
+                        <button type="button" class="ai-suggest-btn">Suggest with AI ✨</button>
+                    </div>
+                </fieldset>
+
+                <fieldset class="form-section">
+                    <legend>Services Page & Service Details</legend>
+                    <fieldset>
+                        <legend>Main Services Page Intro</legend>
+                        <div class="form-group section-visibility-toggle">
+                            <label><input type="checkbox" class="section-visible-checkbox" data-section-name="servicesIntroduction" checked> Show this section on the public site?</label>
+                        </div>
+                        <div class="form-group">
+                            <label for="adminServicesPageTitle">Services Page Title (e.g., "Our Services"):</label>
+                            <input type="text" id="adminServicesPageTitle" name="servicesPageTitle">
+                        </div>
+                        <div class="form-group textarea-group">
+                            <label for="adminServicesPageIntro">Services Page Introduction Text:</label>
+                            <textarea id="adminServicesPageIntro" name="servicesPageIntro" class="ai-target-textarea" data-ai-field-type="servicesPageIntro"></textarea>
+                            <button type="button" class="ai-suggest-btn">Suggest with AI ✨</button>
+                        </div>
+                    </fieldset>
+                    <fieldset>
+                        <legend>Service List Section (Cards on Services Page)</legend>
+                        <div class="form-group section-visibility-toggle">
+                            <label><input type="checkbox" class="section-visible-checkbox" data-section-name="serviceList" checked> Show this section on the public site?</label>
+                        </div>
+                        <p class="admin-note">This toggle controls the visibility of the entire grid of service cards. Individual services are defined below.</p>
+                    </fieldset>
+
+                    <fieldset>
+                        <legend>Our Service Approach Section (on Services Page)</legend>
+                        <div class="form-group section-visibility-toggle">
+                            <label><input type="checkbox" class="section-visible-checkbox" data-section-name="ourApproach" checked> Show this section on the public site?</label>
+                        </div>
+                        <div class="form-group">
+                            <label for="adminServicesApproachTitle">Section Title:</label>
+                            <input type="text" id="adminServicesApproachTitle" name="servicesApproachTitle" value="Our Service Approach">
+                        </div>
+                        <div class="form-group textarea-group">
+                            <label for="adminServicesApproachMainText">Main Text:</label>
+                            <textarea id="adminServicesApproachMainText" name="servicesApproachMainText" class="ai-target-textarea" data-ai-field-type="servicesApproachMainText"></textarea>
+                            <button type="button" class="ai-suggest-btn">Suggest with AI ✨</button>
+                        </div>
+                        <div id="serviceApproachStepsContainer" class="dynamic-list-container">
+                            <!-- Service Approach Steps will be added here -->
+                        </div>
+                        <button type="button" id="addServiceApproachStepButton" class="button-add-item">Add Approach Step</button>
+                        <template id="serviceApproachStepTemplate">
+                            <div class="dynamic-list-item repeating-group-item">
+                                <h4>Approach Step</h4>
+                                <div class="form-group">
+                                    <label>Step Title:</label>
+                                    <input type="text" class="service-approach-step-title-input" name="serviceApproachStepTitle">
+                                </div>
+                                <div class="form-group textarea-group">
+                                    <label>Step Description:</label>
+                                    <textarea class="service-approach-step-desc-input ai-target-textarea" name="serviceApproachStepDesc" data-ai-field-type="serviceApproachStepDesc"></textarea>
+                                    <button type="button" class="ai-suggest-btn">Suggest with AI ✨</button>
+                                </div>
+                                <button type="button" class="remove-item-btn button-danger">Remove Step</button>
+                            </div>
+                        </template>
+                    </fieldset>
+
+                    <fieldset>
+                        <legend>Why Choose Us Section (on Services Page)</legend>
+                        <div class="form-group section-visibility-toggle">
+                            <label><input type="checkbox" class="section-visible-checkbox" data-section-name="whyChooseUs" checked> Show this section on the public site?</label>
+                        </div>
+                        <div class="form-group">
+                            <label for="adminServicesWhyTitle">Section Title:</label>
+                            <input type="text" id="adminServicesWhyTitle" name="servicesWhyTitle" value="Why Choose Our Services?">
+                        </div>
+                        <div class="form-group textarea-group">
+                            <label for="adminServicesWhyMainText">Main Text:</label>
+                            <textarea id="adminServicesWhyMainText" name="servicesWhyMainText" class="ai-target-textarea" data-ai-field-type="servicesWhyMainText"></textarea>
+                            <button type="button" class="ai-suggest-btn">Suggest with AI ✨</button>
+                        </div>
+                        <div id="serviceDifferentiatorsContainer" class="dynamic-list-container">
+                            <!-- Service Differentiators will be added here -->
+                        </div>
+                        <button type="button" id="addServiceDifferentiatorButton" class="button-add-item">Add Differentiator</button>
+                        <template id="serviceDifferentiatorTemplate">
+                            <div class="dynamic-list-item repeating-group-item">
+                                <h4>Differentiator</h4>
+                                <div class="form-group">
+                                    <label>Differentiator Title:</label>
+                                    <input type="text" class="service-differentiator-title-input" name="serviceDifferentiatorTitle">
+                                </div>
+                                <div class="form-group textarea-group">
+                                    <label>Description:</label>
+                                    <textarea class="service-differentiator-desc-input ai-target-textarea" name="serviceDifferentiatorDesc" data-ai-field-type="serviceDifferentiatorDesc"></textarea>
+                                    <button type="button" class="ai-suggest-btn">Suggest with AI ✨</button>
+                                </div>
+                                <button type="button" class="remove-item-btn button-danger">Remove</button>
+                            </div>
+                        </template>
+                    </fieldset>
+
+                    <fieldset>
+                        <legend>Benefits Section (on Services Page)</legend>
+                        <div class="form-group section-visibility-toggle">
+                            <label><input type="checkbox" class="section-visible-checkbox" data-section-name="benefits" checked> Show this section on the public site?</label>
+                        </div>
+                        <div class="form-group">
+                            <label for="adminServicesBenefitsTitle">Section Title:</label>
+                            <input type="text" id="adminServicesBenefitsTitle" name="servicesBenefitsTitle" value="Benefits You Can Expect">
+                        </div>
+                        <div class="form-group textarea-group">
+                            <label for="adminServicesBenefitsMainText">Main Text:</label>
+                            <textarea id="adminServicesBenefitsMainText" name="servicesBenefitsMainText" class="ai-target-textarea" data-ai-field-type="servicesBenefitsMainText"></textarea>
+                            <button type="button" class="ai-suggest-btn">Suggest with AI ✨</button>
+                        </div>
+                        <div id="serviceBenefitItemsContainer" class="dynamic-list-container">
+                            <!-- Benefit Items will be added here -->
+                        </div>
+                        <button type="button" id="addServiceBenefitItemButton" class="button-add-item">Add Benefit Item</button>
+                        <template id="serviceBenefitItemTemplate">
+                            <div class="dynamic-list-item repeating-group-item">
+                                <div class="form-group">
+                                    <label>Benefit Text:</label>
+                                    <input type="text" class="service-benefit-item-text-input" name="serviceBenefitItemText">
+                                </div>
+                                <button type="button" class="remove-item-btn button-danger">Remove</button>
+                            </div>
+                        </template>
+                    </fieldset>
+
+                    <fieldset>
+                        <legend>Case Studies Teaser Section (on Services Page)</legend>
+                        <div class="form-group section-visibility-toggle">
+                            <label><input type="checkbox" class="section-visible-checkbox" data-section-name="caseStudiesTeaser" checked> Show this section on the public site?</label>
+                        </div>
+                        <div class="form-group">
+                            <label for="adminServicesCaseStudiesTitle">Section Title:</label>
+                            <input type="text" id="adminServicesCaseStudiesTitle" name="servicesCaseStudiesTitle" value="Success in Action">
+                        </div>
+                        <div class="form-group textarea-group">
+                            <label for="adminServicesCaseStudiesMainText">Main Text:</label>
+                            <textarea id="adminServicesCaseStudiesMainText" name="servicesCaseStudiesMainText" class="ai-target-textarea" data-ai-field-type="servicesCaseStudiesMainText"></textarea>
+                            <button type="button" class="ai-suggest-btn">Suggest with AI ✨</button>
+                        </div>
+                        <div class="form-group">
+                            <label for="adminServicesCaseStudiesImage">Image URL:</label>
+                            <input type="url" id="adminServicesCaseStudiesImage" name="servicesCaseStudiesImage">
+                        </div>
+                        <div class="form-group">
+                            <label for="adminServicesCaseStudiesImageAlt">Image Alt Text:</label>
+                            <input type="text" id="adminServicesCaseStudiesImageAlt" name="servicesCaseStudiesImageAlt">
+                        </div>
+                        <div class="form-group">
+                            <label for="adminServicesCaseStudiesCaption">Image Caption/Placeholder Text:</label>
+                            <input type="text" id="adminServicesCaseStudiesCaption" name="servicesCaseStudiesCaption">
+                        </div>
+                    </fieldset>
+
+                    <fieldset>
+                        <legend>Services FAQ Section (on Services Page)</legend>
+                        <div class="form-group section-visibility-toggle">
+                            <label><input type="checkbox" class="section-visible-checkbox" data-section-name="faq" checked> Show this section on the public site?</label>
+                        </div>
+                        <div class="form-group">
+                            <label for="adminServicesFaqTitle">Section Title:</label>
+                            <input type="text" id="adminServicesFaqTitle" name="servicesFaqTitle" value="Services FAQ">
+                        </div>
+                        <div class="form-group textarea-group">
+                            <label for="adminServicesFaqMainText">Main Text/Introduction:</label>
+                            <textarea id="adminServicesFaqMainText" name="servicesFaqMainText" class="ai-target-textarea" data-ai-field-type="servicesFaqMainText"></textarea>
+                            <button type="button" class="ai-suggest-btn">Suggest with AI ✨</button>
+                        </div>
+                        <div id="serviceFaqItemsContainer" class="dynamic-list-container">
+                            <!-- FAQ Items will be added here -->
+                        </div>
+                        <button type="button" id="addServiceFaqItemButton" class="button-add-item">Add FAQ Item</button>
+                        <template id="serviceFaqItemTemplate">
+                            <div class="dynamic-list-item repeating-group-item">
+                                <h4>FAQ Item</h4>
+                                <div class="form-group">
+                                    <label>Question:</label>
+                                    <input type="text" class="service-faq-item-question-input" name="serviceFaqItemQuestion">
+                                </div>
+                                <div class="form-group textarea-group">
+                                    <label>Answer:</label>
+                                    <textarea class="service-faq-item-answer-input ai-target-textarea" name="serviceFaqItemAnswer" data-ai-field-type="serviceFaqItemAnswer"></textarea>
+                                    <button type="button" class="ai-suggest-btn">Suggest with AI ✨</button>
+                                </div>
+                                <button type="button" class="remove-item-btn button-danger">Remove</button>
+                            </div>
+                        </template>
+                    </fieldset>
+
+                    <fieldset>
+                        <legend>Custom Quote CTA Section (on Services Page)</legend>
+                        <div class="form-group section-visibility-toggle">
+                            <label><input type="checkbox" class="section-visible-checkbox" data-section-name="customQuoteCta" checked> Show this section on the public site?</label>
+                        </div>
+                        <div class="form-group">
+                            <label for="adminServicesCtaQuoteTitle">Section Title:</label>
+                            <input type="text" id="adminServicesCtaQuoteTitle" name="servicesCtaQuoteTitle" value="Need a Tailored Solution?">
+                        </div>
+                        <div class="form-group textarea-group">
+                            <label for="adminServicesCtaQuoteMainText">Main Text:</label>
+                            <textarea id="adminServicesCtaQuoteMainText" name="servicesCtaQuoteMainText" class="ai-target-textarea" data-ai-field-type="servicesCtaQuoteMainText"></textarea>
+                            <button type="button" class="ai-suggest-btn">Suggest with AI ✨</button>
+                        </div>
+                        <div class="form-group">
+                            <label for="adminServicesCtaQuoteButtonText">Button Text:</label>
+                            <input type="text" id="adminServicesCtaQuoteButtonText" name="servicesCtaQuoteButtonText" value="Request a Custom Quote">
+                        </div>
+                        <div class="form-group">
+                            <label for="adminServicesCtaQuoteButtonLink">Button Link:</label>
+                            <input type="url" id="adminServicesCtaQuoteButtonLink" name="servicesCtaQuoteButtonLink" value="contact.html">
+                        </div>
+                    </fieldset>
+
+
+                    <fieldset>
+                        <legend>List of Individual Services (for cards & detail pages)</legend>
+                        <div id="servicesListContainer" class="dynamic-list-container">
+                            <!-- Service items will be added here -->
+                        </div>
+                        <button type="button" id="addServiceButton" class="button-add-item">Add Service</button>
+                        <template id="serviceItemTemplate">
+                            <div class="dynamic-list-item repeating-group-item">
+                                <h4>Service Item</h4>
+                                <div class="form-group">
+                                    <label>Service ID (Unique, e.g., "strategic-consulting"):</label>
+                                    <input type="text" class="service-id-input" name="serviceId" required>
+                                </div>
+                                <div class="form-group">
+                                    <label>Service Name:</label>
+                                    <input type="text" class="service-name-input" name="serviceName" required>
+                                </div>
+                                <div class="form-group textarea-group">
+                                    <label>Short Description (for listing page):</label>
+                                    <textarea class="service-shortdesc-input ai-target-textarea" name="serviceShortDesc" data-ai-field-type="serviceShortDescription"></textarea>
+                                    <button type="button" class="ai-suggest-btn">Suggest with AI ✨</button>
+                                </div>
+                                <div class="form-group">
+                                    <label>Image URL (for listing card):</label>
+                                    <input type="url" class="service-image-input" name="serviceImage">
+                                </div>
+                                <div class="form-group">
+                                    <label>Detail Page URL (e.g., service-detail.html?service=SERVICE_ID):</label>
+                                    <input type="text" class="service-detailurl-input" name="serviceDetailUrl" required>
+                                </div>
+                                <fieldset>
+                                    <legend>Service Detail Page Content</legend>
+                                    <p class="admin-note">Provide content for the individual service page. Use HTML for formatting if needed in overview/process, or structure as JSON/Markdown for more complex data.</p>
+                                    <div class="form-group section-visibility-toggle">
+                                        <label><input type="checkbox" class="section-visible-checkbox" data-section-name="detailHero" checked> Show Detail Page Hero Banner?</label>
+                                    </div>
+                                    <div class="form-group">
+                                        <label>Detail Page Title (for meta title):</label>
+                                        <input type="text" class="service-detail-pageTitle-input" name="serviceDetailPageTitle">
+                                    </div>
+                                    <div class="form-group textarea-group">
+                                        <label>Detail Page Meta Description:</label>
+                                        <textarea class="service-detail-metaDesc-input ai-target-textarea" name="serviceDetailMetaDesc" data-ai-field-type="serviceDetailMetaDescription"></textarea>
+                                        <button type="button" class="ai-suggest-btn">Suggest with AI ✨</button>
+                                    </div>
+                                    <div class="form-group">
+                                        <label>Detail Page Banner Image URL:</label>
+                                        <input type="url" class="service-detail-bannerImage-input" name="serviceDetailBannerImage">
+                                    </div>
+                                    <div class="form-group section-visibility-toggle">
+                                        <label><input type="checkbox" class="section-visible-checkbox" data-section-name="overview" checked> Show Overview Section (on Detail Page)?</label>
+                                    </div>
+                                    <div class="form-group textarea-group">
+                                        <label>Overview (HTML or Markdown supported by your frontend):</label>
+                                        <textarea class="service-detail-overview-input ai-target-textarea" name="serviceDetailOverview" rows="5" data-ai-field-type="serviceDetailOverview"></textarea>
+                                        <button type="button" class="ai-suggest-btn">Suggest with AI ✨</button>
+                                    </div>
+                                    <div class="form-group section-visibility-toggle">
+                                        <label><input type="checkbox" class="section-visible-checkbox" data-section-name="features" checked> Show Features Section (on Detail Page)?</label>
+                                    </div>
+                                     <div class="form-group">
+                                        <label>Features Section Title (e.g., "Key Features & Benefits"):</label>
+                                        <input type="text" class="service-detail-featuresTitle-input" name="serviceDetailFeaturesTitle">
+                                    </div>
+                                    <div class="form-group textarea-group">
+                                        <label>Features (JSON array of objects: [{name, description, iconPlaceholder, imagePlaceholder, imageAlt}]):</label>
+                                        <textarea class="service-detail-features-input ai-target-textarea" name="serviceDetailFeaturesJson" rows="8" placeholder='[{"name":"Feature 1","description":"Desc 1","iconPlaceholder":"🔍","imagePlaceholder":"url","imageAlt":"alt1"}]' data-ai-field-type="serviceFeaturesJson"></textarea>
+                                         <button type="button" class="ai-suggest-btn">Suggest with AI ✨</button>
+                                    </div>
+                                    <div class="form-group section-visibility-toggle">
+                                        <label><input type="checkbox" class="section-visible-checkbox" data-section-name="specificTestimonials" checked> Show Specific Testimonials Section (on Detail Page)?</label>
+                                    </div>
+                                    <div class="form-group textarea-group">
+                                        <label>Specific Testimonials (JSON array of objects: [{"quote":"...", "author":"...", "company":"..."}]):</label>
+                                        <textarea class="service-detail-specificTestimonialsJson-input ai-target-textarea" name="serviceDetailSpecificTestimonialsJson" rows="5" placeholder='[{"quote":"Great service!","author":"J. Doe","company":"Acme Corp"}]' data-ai-field-type="serviceSpecificTestimonialsJson"></textarea>
+                                        <button type="button" class="ai-suggest-btn">Suggest with AI ✨</button>
+                                    </div>
+                                    <div class="form-group section-visibility-toggle">
+                                        <label><input type="checkbox" class="section-visible-checkbox" data-section-name="relatedResources" checked> Show Related Resources Section (on Detail Page)?</label>
+                                    </div>
+                                    <div class="form-group textarea-group">
+                                        <label>Related Resources/Downloads (JSON array of objects: [{"title":"Resource 1","url":"#","type":"PDF"}]):</label>
+                                        <textarea class="service-detail-relatedResourcesJson-input ai-target-textarea" name="serviceDetailRelatedResourcesJson" rows="5" placeholder='[{"title":"Whitepaper","url":"/docs/file.pdf","type":"PDF"}]' data-ai-field-type="serviceRelatedResourcesJson"></textarea>
+                                        <button type="button" class="ai-suggest-btn">Suggest with AI ✨</button>
+                                    </div>
+                                     <div class="form-group section-visibility-toggle">
+                                        <label><input type="checkbox" class="section-visible-checkbox" data-section-name="process" checked> Show Process Section (on Detail Page)?</label>
+                                    </div>
+                                    <div class="form-group">
+                                        <label>Process Section Title (e.g., "Our Approach"):</label>
+                                        <input type="text" class="service-detail-processTitle-input" name="serviceDetailProcessTitle">
+                                    </div>
+                                    <div class="form-group textarea-group">
+                                        <label>Process Description (HTML or Markdown):</label>
+                                        <textarea class="service-detail-processDesc-input ai-target-textarea" name="serviceDetailProcessDesc" rows="5" data-ai-field-type="serviceDetailProcessDescription"></textarea>
+                                        <button type="button" class="ai-suggest-btn">Suggest with AI ✨</button>
+                                    </div>
+                                    <div class="form-group section-visibility-toggle">
+                                        <label><input type="checkbox" class="section-visible-checkbox" data-section-name="cta" checked> Show Call to Action Button (on Detail Page)?</label>
+                                    </div>
+                                    <div class="form-group">
+                                        <label>CTA Button Text:</label>
+                                        <input type="text" class="service-detail-ctaText-input" name="serviceDetailCtaText">
+                                    </div>
+                                    <div class="form-group">
+                                        <label>CTA Button Link:</label>
+                                        <input type="url" class="service-detail-ctaLink-input" name="serviceDetailCtaLink">
+                                    </div>
+                                </fieldset>
+                                <button type="button" class="remove-item-btn button-danger">Remove Service</button>
+                            </div>
+                        </template>
+                    </fieldset>
+                </fieldset>
+
+                <fieldset class="form-section">
+                    <legend>Blog Page & Blog Posts</legend>
+                    <fieldset>
+                        <legend>Main Blog Page Intro</legend>
+                         <div class="form-group section-visibility-toggle">
+                            <label><input type="checkbox" class="section-visible-checkbox" data-section-name="blogHeader" checked> Show Blog Page Header/Intro?</label>
+                        </div>
+                        <div class="form-group">
+                            <label for="adminBlogPageTitle">Blog Page Title (e.g., "Our Insights"):</label>
+                            <input type="text" id="adminBlogPageTitle" name="blogPageTitle">
+                        </div>
+                        <div class="form-group textarea-group">
+                            <label for="adminBlogPageIntro">Blog Page Introduction Text:</label>
+                            <textarea id="adminBlogPageIntro" name="blogPageIntro" class="ai-target-textarea" data-ai-field-type="blogPageIntro"></textarea>
+                            <button type="button" class="ai-suggest-btn">Suggest with AI ✨</button>
+                        </div>
+                    </fieldset>
+                     <fieldset>
+                        <legend>Blog Post List Section</legend>
+                         <div class="form-group section-visibility-toggle">
+                            <label><input type="checkbox" class="section-visible-checkbox" data-section-name="blogPostsList" checked> Show list of blog posts?</label>
+                        </div>
+                        <p class="admin-note">This toggle controls the visibility of the main grid of blog post summaries. Individual posts are defined below.</p>
+                    </fieldset>
+
+                    <fieldset>
+                        <legend>Featured Post Spotlight Section</legend>
+                        <div class="form-group section-visibility-toggle">
+                            <label><input type="checkbox" class="section-visible-checkbox" data-section-name="featuredPostSpotlight" checked> Show this section on the public site?</label>
+                        </div>
+                        <div class="form-group">
+                            <label for="adminBlogFeaturedPostTitle">Section Title:</label>
+                            <input type="text" id="adminBlogFeaturedPostTitle" name="blogFeaturedPostTitle" value="Featured Post Spotlight">
+                        </div>
+                        <div class="form-group">
+                            <label for="adminBlogFeaturedPostId">Post ID to Feature (from Blog Posts list below):</label>
+                            <input type="text" id="adminBlogFeaturedPostId" name="blogFeaturedPostId" placeholder="e.g., future-of-tech">
+                        </div>
+                        <div class="form-group textarea-group">
+                            <label for="adminBlogFeaturedPostText">Teaser Text for Featured Post:</label>
+                            <textarea id="adminBlogFeaturedPostText" name="blogFeaturedPostText" class="ai-target-textarea" data-ai-field-type="blogFeaturedPostText"></textarea>
+                            <button type="button" class="ai-suggest-btn">Suggest with AI ✨</button>
+                        </div>
+                    </fieldset>
+
+                    <fieldset>
+                        <legend>Categories Overview Section</legend>
+                        <div class="form-group section-visibility-toggle">
+                            <label><input type="checkbox" class="section-visible-checkbox" data-section-name="blogCategoriesOverview" checked> Show this section on the public site?</label>
+                        </div>
+                        <div class="form-group">
+                            <label for="adminBlogCategoriesTitle">Section Title:</label>
+                            <input type="text" id="adminBlogCategoriesTitle" name="blogCategoriesTitle" value="Explore by Category">
+                        </div>
+                        <div class="form-group textarea-group">
+                            <label for="adminBlogCategoriesIntro">Introduction Text:</label>
+                            <textarea id="adminBlogCategoriesIntro" name="blogCategoriesIntro" class="ai-target-textarea" data-ai-field-type="blogCategoriesIntro"></textarea>
+                            <button type="button" class="ai-suggest-btn">Suggest with AI ✨</button>
+                        </div>
+                         <div class="form-group">
+                            <label for="adminBlogCategoriesPlaceholderText">Categories Placeholder Text (e.g., "Tech, Business, Innovation"):</label>
+                            <input type="text" id="adminBlogCategoriesPlaceholderText" name="blogCategoriesPlaceholderText" placeholder="Displayed as plain text. Links need manual HTML or future enhancement.">
+                        </div>
+                    </fieldset>
+
+                    <fieldset>
+                        <legend>Author Spotlight Section</legend>
+                        <div class="form-group section-visibility-toggle">
+                            <label><input type="checkbox" class="section-visible-checkbox" data-section-name="authorSpotlightBlog" checked> Show this section on the public site?</label>
+                        </div>
+                        <div class="form-group">
+                            <label for="adminBlogAuthorSpotlightTitle">Section Title:</label>
+                            <input type="text" id="adminBlogAuthorSpotlightTitle" name="blogAuthorSpotlightTitle" value="Meet Our Authors">
+                        </div>
+                        <div class="form-group textarea-group">
+                            <label for="adminBlogAuthorSpotlightText">Text:</label>
+                            <textarea id="adminBlogAuthorSpotlightText" name="blogAuthorSpotlightText" class="ai-target-textarea" data-ai-field-type="blogAuthorSpotlightText"></textarea>
+                            <button type="button" class="ai-suggest-btn">Suggest with AI ✨</button>
+                        </div>
+                        <div class="form-group">
+                            <label for="adminBlogAuthorSpotlightImage">Image URL:</label>
+                            <input type="url" id="adminBlogAuthorSpotlightImage" name="blogAuthorSpotlightImage">
+                        </div>
+                        <div class="form-group">
+                            <label for="adminBlogAuthorSpotlightImageAlt">Image Alt Text:</label>
+                            <input type="text" id="adminBlogAuthorSpotlightImageAlt" name="blogAuthorSpotlightImageAlt">
+                        </div>
+                    </fieldset>
+
+                    <fieldset>
+                        <legend>Archives Link Section</legend>
+                        <div class="form-group section-visibility-toggle">
+                            <label><input type="checkbox" class="section-visible-checkbox" data-section-name="blogArchivesLink" checked> Show this section on the public site?</label>
+                        </div>
+                        <div class="form-group">
+                            <label for="adminBlogArchivesTitle">Section Title:</label>
+                            <input type="text" id="adminBlogArchivesTitle" name="blogArchivesTitle" value="Looking for Older Posts?">
+                        </div>
+                        <div class="form-group textarea-group">
+                            <label for="adminBlogArchivesText">Text:</label>
+                            <textarea id="adminBlogArchivesText" name="blogArchivesText" class="ai-target-textarea" data-ai-field-type="blogArchivesText"></textarea>
+                            <button type="button" class="ai-suggest-btn">Suggest with AI ✨</button>
+                        </div>
+                        <div class="form-group">
+                            <label for="adminBlogArchivesButtonText">Button Text:</label>
+                            <input type="text" id="adminBlogArchivesButtonText" name="blogArchivesButtonText" value="Visit Archives">
+                        </div>
+                        <div class="form-group">
+                            <label for="adminBlogArchivesButtonLink">Button Link (e.g., /archive.html):</label>
+                            <input type="url" id="adminBlogArchivesButtonLink" name="blogArchivesButtonLink" placeholder="#">
+                        </div>
+                    </fieldset>
+
+                    <fieldset>
+                        <legend>Subscribe CTA Section</legend>
+                        <div class="form-group section-visibility-toggle">
+                            <label><input type="checkbox" class="section-visible-checkbox" data-section-name="blogSubscribeCta" checked> Show this section on the public site?</label>
+                        </div>
+                        <div class="form-group">
+                            <label for="adminBlogSubscribeTitle">Section Title:</label>
+                            <input type="text" id="adminBlogSubscribeTitle" name="blogSubscribeTitle" value="Stay Updated!">
+                        </div>
+                        <div class="form-group textarea-group">
+                            <label for="adminBlogSubscribeText">Text:</label>
+                            <textarea id="adminBlogSubscribeText" name="blogSubscribeText" class="ai-target-textarea" data-ai-field-type="blogSubscribeText"></textarea>
+                            <button type="button" class="ai-suggest-btn">Suggest with AI ✨</button>
+                        </div>
+                        <div class="form-group">
+                            <label for="adminBlogSubscribePlaceholderText">Form Placeholder Text (e.g., "Subscription form coming soon!"):</label>
+                            <input type="text" id="adminBlogSubscribePlaceholderText" name="blogSubscribePlaceholderText">
+                        </div>
+                        <div class="form-group">
+                            <label for="adminBlogSubscribeButtonText">CTA Button Text:</label>
+                            <input type="text" id="adminBlogSubscribeButtonText" name="blogSubscribeButtonText" value="Subscribe Now">
+                        </div>
+                        <div class="form-group">
+                            <label for="adminBlogSubscribeButtonLink">CTA Button Link:</label>
+                            <input type="url" id="adminBlogSubscribeButtonLink" name="blogSubscribeButtonLink" value="contact.html?subject=Blog%20Subscription">
+                        </div>
+                    </fieldset>
+
+                    <fieldset>
+                        <legend>Related Topics Section</legend>
+                        <div class="form-group section-visibility-toggle">
+                            <label><input type="checkbox" class="section-visible-checkbox" data-section-name="relatedTopicsBlog" checked> Show this section on the public site?</label>
+                        </div>
+                        <div class="form-group">
+                            <label for="adminBlogRelatedTopicsTitle">Section Title:</label>
+                            <input type="text" id="adminBlogRelatedTopicsTitle" name="blogRelatedTopicsTitle" value="Related Topics">
+                        </div>
+                        <div class="form-group textarea-group">
+                            <label for="adminBlogRelatedTopicsIntro">Introduction Text:</label>
+                            <textarea id="adminBlogRelatedTopicsIntro" name="blogRelatedTopicsIntro" class="ai-target-textarea" data-ai-field-type="blogRelatedTopicsIntro"></textarea>
+                            <button type="button" class="ai-suggest-btn">Suggest with AI ✨</button>
+                        </div>
+                        <div class="form-group">
+                            <label for="adminBlogRelatedTopicsPlaceholderText">Related Topics Placeholder Text (e.g., "Check out our Services page."):</label>
+                            <input type="text" id="adminBlogRelatedTopicsPlaceholderText" name="blogRelatedTopicsPlaceholderText">
+                        </div>
+                    </fieldset>
+
+                    <fieldset>
+                        <legend>Blog Posts List</legend>
+                        <div id="blogPostsContainer" class="dynamic-list-container">
+                            <!-- Blog post items will be added here -->
+                        </div>
+                        <button type="button" id="addBlogPostButton" class="button-add-item">Add Blog Post</button>
+                        <template id="blogPostTemplate">
+                            <div class="dynamic-list-item repeating-group-item">
+                                <h4>Blog Post</h4>
+                                <div class="form-group">
+                                    <label>Post ID (Unique, e.g., "future-of-tech"):</label>
+                                    <input type="text" class="blogpost-id-input" name="blogPostId" required>
+                                </div>
+                                <div class="form-group">
+                                    <label>Title:</label>
+                                    <input type="text" class="blogpost-title-input" name="blogPostTitle" required>
+                                </div>
+                                <div class="form-group">
+                                    <label>Date (YYYY-MM-DD):</label>
+                                    <input type="date" class="blogpost-date-input" name="blogPostDate">
+                                </div>
+                                <div class="form-group">
+                                    <label>Author:</label>
+                                    <input type="text" class="blogpost-author-input" name="blogPostAuthor">
+                                </div>
+                                <div class="form-group textarea-group">
+                                    <label>Summary (for listing page):</label>
+                                    <textarea class="blogpost-summary-input ai-target-textarea" name="blogPostSummary" data-ai-field-type="blogPostSummary"></textarea>
+                                    <button type="button" class="ai-suggest-btn">Suggest with AI ✨</button>
+                                </div>
+                                <div class="form-group">
+                                    <label>Image URL (for listing card/post header):</label>
+                                    <input type="url" class="blogpost-image-input" name="blogPostImage">
+                                </div>
+                                <div class="form-group">
+                                    <label>Detail Page URL (e.g., blog-post.html?post=POST_ID):</label>
+                                    <input type="text" class="blogpost-detailurl-input" name="blogPostDetailUrl" required>
+                                </div>
+                                 <fieldset>
+                                    <legend>Blog Post Detail Content</legend>
+                                     <p class="admin-note">Provide content for the individual blog post page. Use HTML or Markdown for the full text.</p>
+                                     <div class="form-group section-visibility-toggle">
+                                        <label><input type="checkbox" class="section-visible-checkbox" data-section-name="detailBanner" checked> Show Detail Page Banner Image?</label>
+                                    </div>
+                                    <div class="form-group">
+                                        <label>Detail Page Title (for meta title):</label>
+                                        <input type="text" class="blogpost-detail-pageTitle-input" name="blogPostDetailPageTitle">
+                                    </div>
+                                    <div class="form-group textarea-group">
+                                        <label>Detail Page Meta Description:</label>
+                                        <textarea class="blogpost-detail-metaDesc-input ai-target-textarea" name="blogPostDetailMetaDesc" data-ai-field-type="blogPostDetailMetaDescription"></textarea>
+                                        <button type="button" class="ai-suggest-btn">Suggest with AI ✨</button>
+                                    </div>
+                                    <div class="form-group">
+                                        <label>Detail Page Banner Image URL (used if post header image is different):</label>
+                                        <input type="url" class="blogpost-detail-bannerImage-input" name="blogPostDetailBannerImage">
+                                    </div>
+                                     <div class="form-group section-visibility-toggle">
+                                        <label><input type="checkbox" class="section-visible-checkbox" data-section-name="fullText" checked> Show Main Content Body?</label>
+                                    </div>
+                                    <div class="form-group textarea-group">
+                                        <label>Full Text (JSON array of HTML strings, or Markdown if frontend supports):</label>
+                                        <textarea class="blogpost-detail-fulltext-input ai-target-textarea" name="blogPostDetailFullText" rows="10" placeholder='["<p>First paragraph.</p>", "<h2>Section Title</h2><p>Second paragraph.</p>"]' data-ai-field-type="blogPostFullText"></textarea>
+                                        <button type="button" class="ai-suggest-btn">Suggest with AI ✨</button>
+                                    </div>
+                                    <!-- New Blog Post Detail Fields -->
+                                    <div class="form-group section-visibility-toggle">
+                                        <label><input type="checkbox" class="section-visible-checkbox" data-section-name="authorBioBox" checked> Show Author Bio Box?</label>
+                                    </div>
+                                    <div class="form-group textarea-group">
+                                        <label>Author Bio:</label>
+                                        <textarea class="blogpost-author-bio-input ai-target-textarea" name="blogPostAuthorBio" data-ai-field-type="blogPostAuthorBio"></textarea>
+                                        <button type="button" class="ai-suggest-btn">Suggest with AI ✨</button>
+                                    </div>
+                                    <div class="form-group">
+                                        <label>Author Image URL:</label>
+                                        <input type="url" class="blogpost-author-image-input" name="blogPostAuthorImage">
+                                    </div>
+                                    <div class="form-group">
+                                        <label>Author Profile Page Link (Optional):</label>
+                                        <input type="url" class="blogpost-author-link-input" name="blogPostAuthorLink">
+                                    </div>
+                                    <div class="form-group section-visibility-toggle">
+                                        <label><input type="checkbox" class="section-visible-checkbox" data-section-name="socialShare" checked> Show Social Share Section?</label>
+                                    </div>
+                                    <div class="form-group">
+                                        <label><input type="checkbox" class="blogpost-social-share-enable-input" name="blogPostEnableSocialShare"> Enable Social Share Text?</label>
+                                    </div>
+                                    <div class="form-group">
+                                        <label>Social Share Text (e.g., "Share this post:")</label>
+                                        <input type="text" class="blogpost-social-share-text-input" name="blogPostSocialShareText">
+                                    </div>
+                                     <div class="form-group section-visibility-toggle">
+                                        <label><input type="checkbox" class="section-visible-checkbox" data-section-name="tagsCategories" checked> Show Tags & Categories Section?</label>
+                                    </div>
+                                    <div class="form-group textarea-group">
+                                        <label>Tags (comma-separated):</label>
+                                        <textarea class="blogpost-tags-input ai-target-textarea" name="blogPostTags" data-ai-field-type="blogPostTags"></textarea>
+                                        <button type="button" class="ai-suggest-btn">Suggest with AI ✨</button>
+                                    </div>
+                                    <div class="form-group textarea-group">
+                                        <label>Categories (comma-separated):</label>
+                                        <textarea class="blogpost-categories-input ai-target-textarea" name="blogPostCategories" data-ai-field-type="blogPostCategories"></textarea>
+                                        <button type="button" class="ai-suggest-btn">Suggest with AI ✨</button>
+                                    </div>
+                                    <div class="form-group section-visibility-toggle">
+                                        <label><input type="checkbox" class="section-visible-checkbox" data-section-name="postNavigation" checked> Show Post Navigation (Prev/Next)?</label>
+                                    </div>
+                                    <div class="form-group">
+                                        <label>Previous Post Link Text (e.g., "Previous Article"):</label>
+                                        <input type="text" class="blogpost-prev-text-input" name="blogPostPrevText" value="Previous Post">
+                                    </div>
+                                    <div class="form-group">
+                                        <label>Next Post Link Text (e.g., "Next Article"):</label>
+                                        <input type="text" class="blogpost-next-text-input" name="blogPostNextText" value="Next Post">
+                                    </div>
+                                    <div class="form-group section-visibility-toggle">
+                                        <label><input type="checkbox" class="section-visible-checkbox" data-section-name="relatedPosts" checked> Show Related Posts Section?</label>
+                                    </div>
+                                    <div class="form-group">
+                                        <label>Related Posts Section Title:</label>
+                                        <input type="text" class="blogpost-related-title-input" name="blogPostRelatedTitle" value="Related Posts">
+                                    </div>
+                                    <div class="form-group">
+                                        <label>Related Post IDs (comma-separated, from Blog Posts list):</label>
+                                        <input type="text" class="blogpost-related-ids-input" name="blogPostRelatedIDs">
+                                    </div>
+                                    <div class="form-group section-visibility-toggle">
+                                        <label><input type="checkbox" class="section-visible-checkbox" data-section-name="commentsPlaceholder" checked> Show Comments Placeholder?</label>
+                                    </div>
+                                    <div class="form-group textarea-group">
+                                        <label>Comments Placeholder Text:</label>
+                                        <textarea class="blogpost-comments-placeholder-input ai-target-textarea" name="blogPostCommentsPlaceholder" data-ai-field-type="blogPostCommentsPlaceholderText"></textarea>
+                                        <button type="button" class="ai-suggest-btn">Suggest with AI ✨</button>
+                                    </div>
+                                    <div class="form-group section-visibility-toggle">
+                                        <label><input type="checkbox" class="section-visible-checkbox" data-section-name="postPageCta" checked> Show Post Page CTA Section?</label>
+                                    </div>
+                                    <div class="form-group">
+                                        <label>Post Page CTA Title:</label>
+                                        <input type="text" class="blogpost-cta-title-input" name="blogPostCtaTitle">
+                                    </div>
+                                    <div class="form-group textarea-group">
+                                        <label>Post Page CTA Text:</label>
+                                        <textarea class="blogpost-cta-text-input ai-target-textarea" name="blogPostCtaText" data-ai-field-type="blogPostCtaText"></textarea>
+                                        <button type="button" class="ai-suggest-btn">Suggest with AI ✨</button>
+                                    </div>
+                                    <div class="form-group">
+                                        <label>Post Page CTA Button Text:</label>
+                                        <input type="text" class="blogpost-cta-buttontext-input" name="blogPostCtaButtonText">
+                                    </div>
+                                    <div class="form-group">
+                                        <label>Post Page CTA Button Link:</label>
+                                        <input type="url" class="blogpost-cta-buttonlink-input" name="blogPostCtaButtonLink">
+                                    </div>
+                                </fieldset>
+                                <button type="button" class="remove-item-btn button-danger">Remove Post</button>
+                            </div>
+                        </template>
+                    </fieldset>
+                </fieldset>
+                
+                <fieldset class="form-section">
+                    <legend>Contact Page Content</legend>
+                    <div class="form-group section-visibility-toggle">
+                        <label><input type="checkbox" class="section-visible-checkbox" data-section-name="contactHeader" checked> Show Contact Page Header/Intro?</label>
+                    </div>
+                    <div class="form-group">
+                        <label for="adminContactPageTitle">Page Title:</label>
+                        <input type="text" id="adminContactPageTitle" name="contactPageTitle">
+                    </div>
+                    <div class="form-group textarea-group">
+                        <label for="adminContactPageIntro">Intro Text:</label>
+                        <textarea id="adminContactPageIntro" name="contactPageIntro" class="ai-target-textarea" data-ai-field-type="contactPageIntro"></textarea>
+                        <button type="button" class="ai-suggest-btn">Suggest with AI ✨</button>
+                    </div>
+                    <div class="form-group section-visibility-toggle">
+                        <label><input type="checkbox" class="section-visible-checkbox" data-section-name="contactDetailsColumn" checked> Show Contact Details Column?</label>
+                    </div>
+                    <div class="form-group section-visibility-toggle">
+                        <label><input type="checkbox" class="section-visible-checkbox" data-section-name="contactFormColumn" checked> Show Contact Form Column?</label>
+                    </div>
+                    <div class="form-group">
+                        <label for="adminContactFormTitle">Form Section Title:</label>
+                        <input type="text" id="adminContactFormTitle" name="contactFormTitle">
+                    </div>
+                    <div class="form-group">
+                        <label for="adminContactInfoTitle">Contact Info Section Title:</label>
+                        <input type="text" id="adminContactInfoTitle" name="contactInfoTitle">
+                    </div>
+                    <div class="form-group textarea-group">
+                        <label for="adminContactMapPlaceholder">Map Placeholder Text:</label>
+                        <textarea id="adminContactMapPlaceholder" name="contactMapPlaceholder" class="ai-target-textarea" data-ai-field-type="contactMapPlaceholderText"></textarea>
+                        <button type="button" class="ai-suggest-btn">Suggest with AI ✨</button>
+                    </div>
+                    <div class="form-group">
+                        <label for="adminContactFormspree">Formspree Endpoint URL (or leave blank if using Netlify forms):</label>
+                        <input type="url" id="adminContactFormspree" name="contactFormspree" placeholder="https://formspree.io/f/your_code">
+                    </div>
+
+                    <fieldset>
+                        <legend>Office Hours Section</legend>
+                        <div class="form-group section-visibility-toggle">
+                            <label><input type="checkbox" class="section-visible-checkbox" data-section-name="officeHours" checked> Show this section on the public site?</label>
+                        </div>
+                        <div class="form-group">
+                            <label for="adminContactOfficeHoursTitle">Section Title:</label>
+                            <input type="text" id="adminContactOfficeHoursTitle" name="contactOfficeHoursTitle" value="Our Office Hours">
+                        </div>
+                        <div class="form-group textarea-group">
+                            <label for="adminContactOfficeHoursText">Office Hours Text:</label>
+                            <textarea id="adminContactOfficeHoursText" name="contactOfficeHoursText" class="ai-target-textarea" data-ai-field-type="contactOfficeHoursText" placeholder="e.g., Mon-Fri: 9 AM - 5 PM"></textarea>
+                            <button type="button" class="ai-suggest-btn">Suggest with AI ✨</button>
+                        </div>
+                    </fieldset>
+
+                    <fieldset>
+                        <legend>Response Expectations Section</legend>
+                        <div class="form-group section-visibility-toggle">
+                            <label><input type="checkbox" class="section-visible-checkbox" data-section-name="responseExpectations" checked> Show this section on the public site?</label>
+                        </div>
+                        <div class="form-group">
+                            <label for="adminContactResponseTitle">Section Title:</label>
+                            <input type="text" id="adminContactResponseTitle" name="contactResponseTitle" value="Response Expectations">
+                        </div>
+                        <div class="form-group textarea-group">
+                            <label for="adminContactResponseText">Text:</label>
+                            <textarea id="adminContactResponseText" name="contactResponseText" class="ai-target-textarea" data-ai-field-type="contactResponseText" placeholder="e.g., We typically respond within 24-48 business hours."></textarea>
+                            <button type="button" class="ai-suggest-btn">Suggest with AI ✨</button>
+                        </div>
+                    </fieldset>
+
+                    <fieldset>
+                        <legend>Social Connect Section</legend>
+                        <div class="form-group section-visibility-toggle">
+                            <label><input type="checkbox" class="section-visible-checkbox" data-section-name="socialConnect" checked> Show this section on the public site?</label>
+                        </div>
+                        <div class="form-group">
+                            <label for="adminContactSocialTitle">Section Title:</label>
+                            <input type="text" id="adminContactSocialTitle" name="contactSocialTitle" value="Connect With Us">
+                        </div>
+                        <div class="form-group textarea-group">
+                            <label for="adminContactSocialIntro">Intro Text:</label>
+                            <textarea id="adminContactSocialIntro" name="contactSocialIntro" class="ai-target-textarea" data-ai-field-type="contactSocialIntro"></textarea>
+                            <button type="button" class="ai-suggest-btn">Suggest with AI ✨</button>
+                        </div>
+                        <div id="contactSocialLinksContainer" class="dynamic-list-container">
+                            <!-- Contact Page Social Links will be added here -->
+                        </div>
+                        <button type="button" id="addContactSocialLinkButton" class="button-add-item">Add Social Link</button>
+                        <template id="contactSocialLinkTemplate">
+                            <div class="dynamic-list-item repeating-group-item">
+                                <div class="form-group">
+                                    <label>Platform Name:</label>
+                                    <input type="text" class="contact-social-platform-input" name="contactSocialPlatform">
+                                </div>
+                                <div class="form-group">
+                                    <label>URL:</label>
+                                    <input type="url" class="contact-social-url-input" name="contactSocialUrl">
+                                </div>
+                                <button type="button" class="remove-item-btn button-danger">Remove Link</button>
+                            </div>
+                        </template>
+                    </fieldset>
+                    
+                    <fieldset>
+                        <legend>Location Highlights Section</legend>
+                        <div class="form-group section-visibility-toggle">
+                            <label><input type="checkbox" class="section-visible-checkbox" data-section-name="locationHighlights" checked> Show this section on the public site?</label>
+                        </div>
+                        <div class="form-group">
+                            <label for="adminContactLocationTitle">Section Title:</label>
+                            <input type="text" id="adminContactLocationTitle" name="contactLocationTitle" value="Location Highlights">
+                        </div>
+                        <div class="form-group textarea-group">
+                            <label for="adminContactLocationText">Text (e.g., parking, accessibility):</label>
+                            <textarea id="adminContactLocationText" name="contactLocationText" class="ai-target-textarea" data-ai-field-type="contactLocationText"></textarea>
+                            <button type="button" class="ai-suggest-btn">Suggest with AI ✨</button>
+                        </div>
+                    </fieldset>
+
+                    <fieldset>
+                        <legend>Contact FAQs Section</legend>
+                        <div class="form-group section-visibility-toggle">
+                            <label><input type="checkbox" class="section-visible-checkbox" data-section-name="contactFaqs" checked> Show this section on the public site?</label>
+                        </div>
+                        <div class="form-group">
+                            <label for="adminContactFaqsTitle">Section Title:</label>
+                            <input type="text" id="adminContactFaqsTitle" name="contactFaqsTitle" value="Contact FAQs">
+                        </div>
+                        <div class="form-group textarea-group">
+                            <label for="adminContactFaqsIntro">Intro Text:</label>
+                            <textarea id="adminContactFaqsIntro" name="contactFaqsIntro" class="ai-target-textarea" data-ai-field-type="contactFaqsIntro"></textarea>
+                            <button type="button" class="ai-suggest-btn">Suggest with AI ✨</button>
+                        </div>
+                        <div id="contactFaqItemsContainer" class="dynamic-list-container">
+                            <!-- Contact FAQ Items will be added here -->
+                        </div>
+                        <button type="button" id="addContactFaqItemButton" class="button-add-item">Add FAQ Item</button>
+                        <template id="contactFaqItemTemplate">
+                            <div class="dynamic-list-item repeating-group-item">
+                                <h4>FAQ Item</h4>
+                                <div class="form-group textarea-group">
+                                    <label>Question:</label>
+                                    <textarea class="contact-faq-item-question-input ai-target-textarea" name="contactFaqItemQuestion" data-ai-field-type="contactFaqItemQuestion"></textarea>
+                                    <button type="button" class="ai-suggest-btn">Suggest with AI ✨</button>
+                                </div>
+                                <div class="form-group textarea-group">
+                                    <label>Answer:</label>
+                                    <textarea class="contact-faq-item-answer-input ai-target-textarea" name="contactFaqItemAnswer" data-ai-field-type="contactFaqItemAnswer"></textarea>
+                                    <button type="button" class="ai-suggest-btn">Suggest with AI ✨</button>
+                                </div>
+                                <button type="button" class="remove-item-btn button-danger">Remove FAQ</button>
+                            </div>
+                        </template>
+                    </fieldset>
+                </fieldset>
+
+                <button type="submit" id="saveAllChangesButton">Save All Changes</button>
+            </form>
+        </div>
+
+        <!-- AI Suggestion Modal -->
+        <div id="aiSuggestionModal" class="modal">
+            <div class="modal-content">
+                <span class="modal-close-btn">&times;</span>
+                <h2 id="aiSuggestionModalTitle">AI Suggestions</h2>
+                <div id="aiSuggestionModalLoading" class="spinner-container" style="display: none;">
+                    <div class="spinner"></div>
+                    <p>Generating suggestions...</p>
+                </div>
+                <ul id="aiSuggestionsList">
+                    <!-- Suggestions will be populated here -->
+                </ul>
+                <p id="aiSuggestionModalError" class="error-message" style="display: none;"></p>
+            </div>
+        </div>
+
+    </main>
+
+    <footer>
+        <p>&copy; 2024 Your Company Admin. Manage your brandable site with ease.</p>
+    </footer>
+
+    <script type="module" src="assets/js/admin.js"></script>
+</body>
+</html>

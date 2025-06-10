@@ -1,0 +1,317 @@
+/* assets/css/animations.css */
+
+/* Page Load Animation */
+main {
+  opacity: 0;
+  transform: translateY(20px);
+  transition: opacity 0.6s ease-out, transform 0.6s ease-out;
+}
+
+main.loaded {
+  opacity: 1;
+  transform: translateY(0);
+}
+
+/* Hero Element Entrance Animations (Homepage & About Page & Service Detail) */
+#hero .hero-content h1,
+#hero .hero-content p,
+#hero .hero-cta-button,
+#about-hero .hero-content h1,
+#about-hero .hero-content p,
+#service-detail-hero .hero-content h1 {
+  opacity: 0;
+  transform: translateY(20px);
+}
+
+main.loaded #hero .hero-content h1,
+main.loaded #about-hero .hero-content h1,
+main.loaded #service-detail-hero .hero-content h1 {
+  animation: heroElementFadeInUp 0.7s ease-out 0.4s forwards; /* Delay after main fades */
+}
+main.loaded #hero .hero-content p,
+main.loaded #about-hero .hero-content p {
+  animation: heroElementFadeInUp 0.7s ease-out 0.6s forwards;
+}
+main.loaded #hero .hero-cta-button {
+  animation: heroElementFadeInUp 0.7s ease-out 0.8s forwards;
+}
+
+@keyframes heroElementFadeInUp {
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+
+/* Scroll-triggered Animations */
+.animate-on-scroll {
+  opacity: 0;
+  transform: translateY(30px) scale(0.98); /* Added scale for gentle zoom-in effect */
+  transition: opacity 0.6s ease-out, transform 0.6s ease-out; /* Slightly longer duration for smoother scale */
+  transition-delay: 0.1s; /* Slight delay */
+}
+
+.animate-on-scroll.is-visible {
+  opacity: 1;
+  transform: translateY(0) scale(1); /* Reset scale */
+}
+
+/* Specific Scroll Animations for About Teaser & Story Blocks & Feature Blocks */
+@keyframes slideInFromLeft {
+  from {
+    opacity: 0;
+    transform: translateX(-50px) scale(0.98); /* Start with scale if desired for consistency */
+  }
+  to {
+    opacity: 1;
+    transform: translateX(0) scale(1);
+  }
+}
+
+@keyframes slideInFromRight {
+  from {
+    opacity: 0;
+    transform: translateX(50px) scale(0.98); /* Start with scale */
+  }
+  to {
+    opacity: 1;
+    transform: translateX(0) scale(1);
+  }
+}
+
+/* Ensure elements using slide-in also respect initial opacity from .animate-on-scroll */
+.animate-on-scroll.animate-slide-in-left,
+#our-story .story-block.image-left .story-image-col, 
+#our-story .story-block.image-right .story-text-col,
+#service-detail-main .feature-block.feature-block-image-left .feature-image-col,
+#service-detail-main .feature-block.feature-block-text-left .feature-text-col,
+#our-story .story-block.image-left .story-text-col,
+#our-story .story-block.image-right .story-image-col,
+#service-detail-main .feature-block.feature-block-image-left .feature-text-col,
+#service-detail-main .feature-block.feature-block-text-left .feature-image-col {
+    opacity: 0; /* Explicitly set opacity for keyframe animations */
+}
+
+
+.animate-on-scroll.animate-slide-in-left.is-visible,
+#our-story .story-block.image-left.is-visible .story-image-col,
+#our-story .story-block.image-right.is-visible .story-text-col,
+#service-detail-main .feature-block.feature-block-image-left.is-visible .feature-image-col,
+#service-detail-main .feature-block.feature-block-text-left.is-visible .feature-text-col {
+  animation: slideInFromLeft 0.7s cubic-bezier(0.25, 0.46, 0.45, 0.94) forwards;
+  /* transform property is handled by the animation */
+}
+
+.animate-on-scroll.animate-slide-in-right.is-visible,
+#our-story .story-block.image-left.is-visible .story-text-col,
+#our-story .story-block.image-right.is-visible .story-image-col,
+#service-detail-main .feature-block.feature-block-image-left.is-visible .feature-text-col,
+#service-detail-main .feature-block.feature-block-text-left.is-visible .feature-image-col {
+  animation: slideInFromRight 0.7s cubic-bezier(0.25, 0.46, 0.45, 0.94) 0.15s forwards; /* Slight delay for text */
+  /* transform property is handled by the animation */
+}
+
+
+/* Hover Effects */
+
+/* Buttons */
+form button, .button {
+  transition: transform 0.2s ease-out, box-shadow 0.2s ease-out, background-color 0.2s ease, color 0.2s ease, border-color 0.2s ease;
+}
+
+form button:hover, .button:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 4px 8px rgba(0,0,0,0.15);
+}
+
+/* Enhanced Hero CTA Button Hover */
+.hero-cta-button {
+    /* transition is already on .button */
+}
+.hero-cta-button:hover {
+  transform: translateY(-2px) scale(1.05); /* Combined Y translate with new scale */
+  box-shadow: 0 6px 12px rgba(0,0,0,0.2); /* More pronounced shadow */
+  /* background-color and color are handled by main .button:hover and specific .hero-cta-button:hover in style.css */
+}
+
+
+/* Service Cards */
+.service-card {
+  transition: transform var(--transition-duration-normal) ease-out, 
+              box-shadow var(--transition-duration-normal) ease-out;
+}
+.service-card img {
+    transition: transform var(--transition-duration-normal) ease-out;
+}
+
+.service-card:hover {
+  transform: translateY(-8px) scale(1.02);
+  box-shadow: 0 10px 25px rgba(0,0,0,0.1);
+}
+body.dark-mode .service-card:hover {
+    box-shadow: 0 10px 25px rgba(0,0,0,0.2);
+}
+
+.service-card:hover img {
+  transform: scale(1.1);
+}
+
+/* Blog Post Summaries (Cards) */
+.blog-post-summary {
+  transition: transform var(--transition-duration-normal) ease-out, 
+              box-shadow var(--transition-duration-normal) ease-out;
+}
+.blog-post-summary img {
+    transition: transform var(--transition-duration-normal) ease-out;
+}
+
+.blog-post-summary:hover {
+  transform: translateY(-8px) scale(1.02);
+  box-shadow: 0 10px 25px rgba(0,0,0,0.1);
+}
+body.dark-mode .blog-post-summary:hover {
+    box-shadow: 0 10px 25px rgba(0,0,0,0.2);
+}
+.blog-post-summary:hover img {
+  transform: scale(1.05); /* Subtle zoom for blog card image */
+}
+
+
+/* Bento Grid Item Hover Effect */
+.bento-item {
+  transition: transform var(--transition-duration-normal) ease-out, 
+              box-shadow var(--transition-duration-normal) ease-out;
+}
+
+.bento-item:hover {
+  transform: translateY(-5px) scale(1.02);
+  box-shadow: 0 8px 25px rgba(0,0,0,0.07);
+}
+
+/* Team Member Card Hover (Overlay handled by CSS transition in style.css) */
+.team-member-card {
+    transition: transform var(--transition-duration-normal) ease-out, 
+                box-shadow var(--transition-duration-normal) ease-out;
+}
+.team-member-card:hover {
+    transform: translateY(-5px);
+    box-shadow: 0 10px 25px rgba(0,0,0,0.1);
+}
+body.dark-mode .team-member-card:hover {
+    box-shadow: 0 10px 25px rgba(0,0,0,0.2);
+}
+
+/* Value Item Hover (Optional) */
+.value-item {
+    transition: transform var(--transition-duration-normal) ease-out, 
+                box-shadow var(--transition-duration-normal) ease-out;
+}
+.value-item:hover {
+    transform: translateY(-3px) scale(1.01);
+    box-shadow: 0 6px 18px rgba(0,0,0,0.06);
+}
+body.dark-mode .value-item:hover {
+     box-shadow: 0 6px 18px rgba(0,0,0,0.15);
+}
+
+/* About Teaser Image Hover Overlay - Transition handled in style.css on ::after */
+
+
+/* Feature Block elements: Hover and scroll animations */
+.feature-block {
+    /* .animate-on-scroll is applied, hover effects can be added directly if desired */
+    transition: box-shadow var(--transition-duration-normal) ease-out;
+}
+.feature-block:hover {
+    box-shadow: 0 8px 20px rgba(0,0,0,0.08);
+}
+body.dark-mode .feature-block:hover {
+    box-shadow: 0 8px 20px rgba(0,0,0,0.18);
+}
+
+/* Testimonial Card Hover Effect */
+.testimonial-card {
+    transition: transform var(--transition-duration-normal) ease-out, 
+                box-shadow var(--transition-duration-normal) ease-out;
+}
+.testimonial-card:hover {
+    transform: translateY(-5px) scale(1.01);
+    box-shadow: 0 8px 20px rgba(0,0,0,0.08);
+}
+body.dark-mode .testimonial-card:hover {
+    box-shadow: 0 8px 20px rgba(0,0,0,0.18);
+}
+
+
+/* Navigation Link Hover Effect (Underline part) */
+.nav-link {
+    position: relative; /* For pseudo-element underline */
+    padding: var(--space-xs) var(--space-sm); /* Standardized padding */
+}
+
+.nav-link::after {
+    content: '';
+    position: absolute;
+    bottom: 2px; /* Adjust based on padding */
+    left: 50%; /* Start from center */
+    transform: translateX(-50%); /* Center align */
+    width: 0;
+    height: 2px;
+    background-color: var(--accent-color);
+    transition: width 0.3s ease;
+}
+
+.nav-link:hover::after,
+.nav-link.active-link::after,
+.nav-link:focus-visible::after { /* Apply underline on focus as well */
+    width: calc(100% - var(--space-sm) * 1); /* Adjust width based on padding to not overlap rounding */
+}
+
+/* Testimonial Slider Navigation Buttons */
+.slider-nav {
+    transition: background-color var(--transition-duration-normal) ease,
+                color var(--transition-duration-normal) ease,
+                opacity var(--transition-duration-normal) ease,
+                transform var(--transition-duration-short) ease;
+}
+.slider-nav:not(:disabled):hover {
+    background-color: var(--accent-color);
+    color: var(--button-text-color); /* Assuming this is typically white or light */
+    transform: translateY(-50%) scale(1.1);
+}
+.slider-nav:focus-visible {
+    outline: 2px solid var(--accent-color);
+    outline-offset: 2px;
+    background-color: var(--accent-color); /* Consistent with hover for clear focus */
+    color: var(--button-text-color);
+}
+
+
+/* Dark mode adjustments for animations if needed (e.g., different shadow colors) */
+body.dark-mode form button:hover,
+body.dark-mode .button:hover {
+  box-shadow: 0 4px 8px rgba(255,255,255,0.1);
+}
+
+body.dark-mode .hero-cta-button:hover {
+  box-shadow: 0 6px 12px rgba(255,255,255,0.15);
+}
+
+body.dark-mode .service-card:hover {
+  box-shadow: 0 10px 25px rgba(255,255,255,0.08); /* Adjusted for service card */
+}
+
+body.dark-mode .blog-post-summary:hover {
+  box-shadow: 0 10px 25px rgba(255,255,255,0.08);
+}
+
+body.dark-mode .bento-item:hover {
+  box-shadow: 0 8px 25px rgba(255,255,255,0.06);
+}
+
+body.dark-mode .slider-nav:not(:disabled):hover,
+body.dark-mode .slider-nav:focus-visible {
+    background-color: var(--accent-color);
+    color: var(--button-text-color);
+}

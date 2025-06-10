@@ -1,0 +1,117 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="description" content="Detailed information about one of our services.">
+    <title>Service Detail - Brandable Static Site</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;700&family=Outfit:wght@400;500;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="assets/css/theme.css">
+    <link rel="stylesheet" href="assets/css/style.css">
+    <link rel="stylesheet" href="assets/css/animations.css">
+    <link rel="stylesheet" href="assets/css/responsive.css">
+    <!-- Firebase SDKs -->
+    <script src="https://www.gstatic.com/firebasejs/9.6.1/firebase-app-compat.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/9.6.1/firebase-firestore-compat.js"></script>
+</head>
+<body>
+    <header>
+        <div class="nav-container">
+            <a href="index.html" class="logo">BrandName</a>
+            <button class="nav-toggle" id="navToggle" aria-label="Toggle navigation" aria-expanded="false" aria-controls="navLinks">
+                <span class="icon-bar"></span>
+                <span class="icon-bar"></span>
+                <span class="icon-bar"></span>
+            </button>
+            <nav class="nav-links-container" id="navLinks" aria-label="Main navigation">
+                <button class="nav-close-btn" aria-label="Close navigation">&times;</button>
+                <ul>
+                    <li><a href="index.html" class="nav-link">Home</a></li>
+                    <li><a href="about.html" class="nav-link">About Us</a></li>
+                    <li><a href="services.html" class="nav-link active-link">Services</a></li>
+                    <li><a href="blog.html" class="nav-link">Blog</a></li>
+                    <li><a href="contact.html" class="nav-link">Contact Us</a></li>
+                </ul>
+                <button id="mobileNavThemeToggle" class="button theme-toggle-btn mobile-only-theme-toggle">Switch Theme</button>
+            </nav>
+        </div>
+    </header>
+
+    <main>
+        <section id="service-detail-hero" class="animate-on-scroll">
+            <div class="hero-background-placeholder"></div>
+            <div class="hero-content">
+                <h1 id="service-detail-title">Service Name Loaded Here</h1>
+            </div>
+        </section>
+
+        <section id="breadcrumb-section" class="animate-on-scroll">
+            <nav aria-label="breadcrumb">
+                <ol class="breadcrumb">
+                    <li class="breadcrumb-item"><a href="index.html">Home</a></li>
+                    <li class="breadcrumb-item"><a href="services.html">Services</a></li>
+                    <li class="breadcrumb-item active" aria-current="page" id="breadcrumb-service-name">Service Name</li>
+                </ol>
+            </nav>
+        </section>
+
+        <section id="service-detail-main" class="animate-on-scroll">
+            <h2 id="service-overview-title">Service Overview</h2>
+            <p id="service-overview-text">Loading service overview...</p>
+            
+            <h2 id="service-features-title" style="display:none;">Key Features</h2>
+            <div id="service-features-container">
+                <!-- Feature blocks will be populated here by JS -->
+                <p>Loading features...</p>
+            </div>
+
+            <h2 id="service-process-title" style="display:none;">Our Process</h2>
+            <p id="service-process-description" style="display:none;">Loading process details...</p>
+
+            <a id="service-detail-cta" href="#" class="button" style="display:none; margin-top: 1.5rem;">Call to Action</a>
+            <a href="services.html" class="button" style="margin-top: 1.5rem; margin-left: 1rem;">&laquo; Back to All Services</a>
+        </section>
+    </main>
+
+    <footer>
+        <div class="footer-container">
+            <div class="footer-main-content">
+                <div class="footer-column" id="footerBrandColumn">
+                     <a href="index.html" class="logo footer-logo">BrandName</a>
+                     <p class="footer-copyright-text">&copy; 2024 Company Name. All rights reserved.</p>
+                </div>
+                <div class="footer-column" id="footerLinksColumn">
+                    <h4>Quick Links</h4>
+                    <ul>
+                        <li><a href="index.html">Home</a></li>
+                        <li><a href="about.html">About Us</a></li>
+                        <li><a href="services.html">Services</a></li>
+                        <li><a href="blog.html">Blog</a></li>
+                        <li><a href="contact.html">Contact Us</a></li>
+                    </ul>
+                </div>
+                <div class="footer-column" id="footerContactColumn">
+                    <h4>Get in Touch</h4>
+                    <div id="footerContactDetails">
+                        <!-- Contact details will be populated here by JS -->
+                    </div>
+                    <div id="footerSocialMedia">
+                        <!-- Social media links will be populated here by JS -->
+                    </div>
+                </div>
+            </div>
+            <div class="footer-bottom-bar">
+                <button id="themeToggleButton" class="button theme-toggle-btn">Switch to Dark Mode</button>
+                <p><a href="#top">Back to top</a></p>
+            </div>
+        </div>
+    </footer>
+
+    <script src="assets/js/main.js"></script>
+    <script src="assets/js/theme-switcher.js"></script>
+    <script src="assets/js/navigation.js"></script>
+    <script src="assets/js/animations.js"></script>
+</body>
+</html>

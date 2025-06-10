@@ -1,0 +1,100 @@
+/* assets/css/theme.css */
+
+:root {
+  /* Font Families */
+  --font-family-base: "Inter", system-ui, -apple-system, "Segoe UI", Roboto, "Helvetica Neue", Arial, "Noto Sans", "Liberation Sans", sans-serif, "Apple Color Emoji", "Segoe UI Emoji", "Segoe UI Symbol", "Noto Color Emoji";
+  --font-family-heading: "Outfit", "Georgia", serif;
+
+  /* Typographic Scale */
+  --font-size-h1: 2.75rem;
+  --font-size-h2: 2.25rem;
+  --font-size-h3: 1.75rem;
+  --font-size-h4: 1.5rem;
+  --font-size-h5: 1.25rem;
+  --font-size-h6: 1rem;
+  --font-size-p: 1rem;
+  --font-size-small: 0.875rem;
+
+  /* Spacing System */
+  --space-xxs: 0.25rem; /* 4px */
+  --space-xs: 0.5rem;   /* 8px */
+  --space-sm: 0.75rem;  /* 12px */
+  --space-md: 1rem;     /* 16px */
+  --space-lg: 1.5rem;   /* 24px */
+  --space-xl: 2rem;     /* 32px */
+  --space-xxl: 3rem;    /* 48px */
+  
+  --container-padding: var(--space-lg);
+  --section-padding: var(--space-xl);
+  --element-spacing-vertical: var(--space-md);
+  --element-spacing-horizontal: var(--space-sm);
+
+  /* Transitions */
+  --transition-duration-short: 0.15s;
+  --transition-duration-normal: 0.3s;
+  --transition-duration-long: 0.5s;
+
+  /* Light Theme (Default) */
+  --primary-color: #3498DB;         /* Peter River */
+  --secondary-color: #95A5A6;       /* Concrete */
+  --accent-color: #1ABC9C;          /* Turquoise */
+  --accent-color-rgb: 26, 188, 156; /* Turquoise RGB for use in rgba() */
+  --text-color: #34495E;            /* Wet Asphalt */
+  --text-color-muted: #7F8C8D;      /* Asbestos */
+  --text-color-muted-rgb: 127, 140, 141; /* Asbestos RGB */
+  --background-color: #ECF0F1;      /* Clouds */
+  --surface-color: #FFFFFF;         /* White */
+  --surface-color-rgb: 255, 255, 255; /* White RGB */
+  
+  --header-bg-color: #2C3E50;       /* Midnight Blue */
+  --header-text-color: #ECF0F1;     /* Clouds */
+  --header-shadow-color: rgba(0,0,0,0.07);
+
+  --footer-bg-color: #2C3E50;       /* Midnight Blue */
+  --footer-text-color: #ECF0F1;     /* Clouds */
+  --footer-heading-color: var(--accent-color); /* Brighter headings in footer */
+  
+  --link-color: var(--primary-color);
+  --link-hover-color: #2980B9;      /* Belize Hole */
+  --border-color: #BDC3C7;          /* Silver */
+
+  --button-bg-color: var(--primary-color);
+  --button-text-color: #FFFFFF;
+  --button-hover-bg-color: var(--link-hover-color);
+
+  --mobile-overlay-bg-color: rgba(44, 62, 80, 0.98); /* Slightly translucent Midnight Blue */
+  --mobile-overlay-text-color: #ECF0F1;
+}
+
+body.dark-mode {
+  /* Dark Theme */
+  --primary-color: #3498DB;         /* Peter River */
+  --secondary-color: #7F8C8D;       /* Asbestos */
+  --accent-color: #16A085;          /* Green Sea */
+  --accent-color-rgb: 22, 160, 133; /* Green Sea RGB for use in rgba() */
+  --text-color: #ECF0F1;            /* Clouds */
+  --text-color-muted: #95A5A6;      /* Concrete */
+  --text-color-muted-rgb: 149, 165, 166; /* Concrete RGB */
+  --background-color: #2C3E50;      /* Midnight Blue */
+  --surface-color: #34495E;         /* Wet Asphalt */
+  --surface-color-rgb: 52, 73, 94; /* Wet Asphalt RGB */
+
+  --header-bg-color: #1F2D3D;       /* Darker Midnight Blue variant for depth */
+  --header-text-color: #ECF0F1;     /* Clouds */
+  --header-shadow-color: rgba(0,0,0,0.25);
+
+  --footer-bg-color: #1F2D3D;       /* Darker Midnight Blue variant for depth */
+  --footer-text-color: #ECF0F1;     /* Clouds */
+  --footer-heading-color: var(--accent-color); /* Accent color for headings in dark footer */
+  
+  --link-color: var(--accent-color); /* Using accent for links in dark mode for pop */
+  --link-hover-color: #1ABC9C;      /* Turquoise - brighter version of accent on hover */
+  --border-color: #4A627A;          /* Subtle border color for dark mode */
+
+  --button-bg-color: var(--primary-color);
+  --button-text-color: #FFFFFF;
+  --button-hover-bg-color: #2980B9; /* Belize Hole */
+
+  --mobile-overlay-bg-color: rgba(31, 45, 61, 0.98); /* Slightly translucent Darker Midnight Blue */
+  --mobile-overlay-text-color: #ECF0F1;
+}

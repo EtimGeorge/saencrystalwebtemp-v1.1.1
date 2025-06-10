@@ -1,0 +1,154 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="description" content="Learn more about our company, our mission, vision, and values.">
+    <title>About Us - Brandable Static Site</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;700&family=Outfit:wght@400;500;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="assets/css/theme.css">
+    <link rel="stylesheet" href="assets/css/style.css">
+    <link rel="stylesheet" href="assets/css/animations.css">
+    <link rel="stylesheet" href="assets/css/responsive.css">
+    <!-- Firebase SDKs -->
+    <script src="https://www.gstatic.com/firebasejs/9.6.1/firebase-app-compat.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/9.6.1/firebase-firestore-compat.js"></script>
+</head>
+<body>
+    <header>
+        <div class="nav-container">
+            <a href="index.html" class="logo">BrandName</a>
+            <button class="nav-toggle" id="navToggle" aria-label="Toggle navigation" aria-expanded="false" aria-controls="navLinks">
+                <span class="icon-bar"></span>
+                <span class="icon-bar"></span>
+                <span class="icon-bar"></span>
+            </button>
+            <nav class="nav-links-container" id="navLinks" aria-label="Main navigation">
+                <button class="nav-close-btn" aria-label="Close navigation">&times;</button>
+                <ul>
+                    <li><a href="index.html" class="nav-link">Home</a></li>
+                    <li><a href="about.html" class="nav-link active-link">About Us</a></li>
+                    <li><a href="services.html" class="nav-link">Services</a></li>
+                    <li><a href="blog.html" class="nav-link">Blog</a></li>
+                    <li><a href="contact.html" class="nav-link">Contact Us</a></li>
+                </ul>
+                <button id="mobileNavThemeToggle" class="button theme-toggle-btn mobile-only-theme-toggle">Switch Theme</button>
+            </nav>
+        </div>
+    </header>
+
+    <main>
+        <section id="about-hero">
+            <div class="hero-background-placeholder"></div>
+            <div class="hero-content">
+                <h1 id="about-hero-title">About Our Company</h1>
+                <p id="about-hero-subtitle">Discover our story, mission, and the values that drive us forward.</p>
+            </div>
+        </section>
+
+        <section id="our-story" class="animate-on-scroll">
+            <h2 id="our-story-title">Our Story</h2>
+            <div id="story-blocks-container" class="story-blocks-container">
+                <!-- Story blocks will be populated here by JS -->
+            </div>
+        </section>
+
+        <section id="team" class="animate-on-scroll">
+            <h2 id="team-title">Our Team</h2>
+            <p id="team-intro-text">Meet the dedicated individuals behind our success.</p>
+            <div id="team-grid-container" class="team-grid">
+                <!-- Team member cards will be populated here by JS -->
+            </div>
+        </section>
+
+        <section id="values" class="animate-on-scroll">
+            <h2 id="values-title">Our Values</h2>
+            <p id="values-intro-text">The core principles that guide our work and culture.</p>
+            <div id="values-list-container" class="values-list">
+                <!-- Value items will be populated here by JS -->
+            </div>
+        </section>
+
+        <section id="mission-vision" class="animate-on-scroll">
+            <h2 id="mission-vision-section-title">Our Mission & Vision</h2>
+            <div style="display: flex; flex-wrap: wrap; gap: var(--space-lg); margin-top: var(--space-md);">
+                <div style="flex: 1; min-width: 300px;">
+                    <h3 id="mission-title">Our Mission</h3>
+                    <p id="mission-text">Placeholder text: Our mission is to empower businesses and individuals through innovative solutions and unwavering commitment to excellence. We strive to deliver exceptional value and foster growth for our clients and communities.</p>
+                </div>
+                <div style="flex: 1; min-width: 300px;">
+                    <h3 id="vision-title">Our Vision</h3>
+                    <p id="vision-text">Placeholder text: Our vision is to be a leading force in our industry, recognized for our transformative impact, ethical practices, and the continuous pursuit of a better future. We aim to inspire and innovate, creating lasting positive change.</p>
+                </div>
+            </div>
+        </section>
+
+        <section id="company-culture" class="animate-on-scroll">
+            <h2 id="culture-section-title">Our Culture</h2>
+            <p id="culture-main-text">Placeholder text: At [CompanyName], we cultivate a collaborative, inclusive, and dynamic work environment. We believe in empowering our team members, fostering creativity, and encouraging continuous learning and development. Our culture is built on respect, integrity, and a shared passion for what we do.</p>
+            <div style="text-align: center; margin-top: var(--space-md);">
+                <img id="culture-image" src="assets/images/placeholder-culture.jpg" alt="Placeholder for company culture visual" style="max-width: 500px; border-radius: 8px;">
+            </div>
+        </section>
+
+        <section id="community-involvement" class="animate-on-scroll">
+            <h2 id="community-section-title">Community Involvement & CSR</h2>
+            <p id="community-main-text">Placeholder text: We are committed to making a positive impact beyond our core business. [CompanyName] actively participates in community initiatives and upholds strong corporate social responsibility principles. We believe in giving back and contributing to a sustainable and equitable society. Details about our specific programs and partnerships will be shared here.</p>
+            <ul id="community-involvement-list-container" style="list-style-position: inside; padding-left: var(--space-sm); margin-top: var(--space-md);">
+                <li>Supporting local education programs.</li>
+                <li>Promoting environmental sustainability.</li>
+                <li>Encouraging employee volunteering.</li>
+            </ul>
+        </section>
+
+        <section id="careers-teaser" class="animate-on-scroll">
+            <h2 id="careers-section-title">Join Our Team</h2>
+            <p id="careers-main-text">Placeholder text: Interested in becoming a part of [CompanyName]? We are always looking for talented and passionate individuals to join our growing team. Explore potential opportunities and discover how you can contribute to our mission.</p>
+            <div style="text-align: center; margin-top: var(--space-lg);">
+                <a href="contact.html" class="button" id="careers-button">Explore Careers (Placeholder)</a>
+            </div>
+        </section>
+    </main>
+
+    <footer>
+        <div class="footer-container">
+            <div class="footer-main-content">
+                <div class="footer-column" id="footerBrandColumn">
+                     <a href="index.html" class="logo footer-logo">BrandName</a>
+                     <p class="footer-copyright-text">&copy; 2024 Company Name. All rights reserved.</p>
+                </div>
+                <div class="footer-column" id="footerLinksColumn">
+                    <h4>Quick Links</h4>
+                    <ul>
+                        <li><a href="index.html">Home</a></li>
+                        <li><a href="about.html">About Us</a></li>
+                        <li><a href="services.html">Services</a></li>
+                        <li><a href="blog.html">Blog</a></li>
+                        <li><a href="contact.html">Contact Us</a></li>
+                    </ul>
+                </div>
+                <div class="footer-column" id="footerContactColumn">
+                    <h4>Get in Touch</h4>
+                    <div id="footerContactDetails">
+                        <!-- Contact details will be populated here by JS -->
+                    </div>
+                    <div id="footerSocialMedia">
+                        <!-- Social media links will be populated here by JS -->
+                    </div>
+                </div>
+            </div>
+            <div class="footer-bottom-bar">
+                <button id="themeToggleButton" class="button theme-toggle-btn">Switch to Dark Mode</button>
+                <p><a href="#top">Back to top</a></p>
+            </div>
+        </div>
+    </footer>
+
+    <script src="assets/js/main.js"></script>
+    <script src="assets/js/theme-switcher.js"></script>
+    <script src="assets/js/navigation.js"></script>
+    <script src="assets/js/animations.js"></script>
+</body>
+</html>

@@ -1,0 +1,159 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="description" content="Welcome to our company. Learn more about what we do.">
+    <title>Home - Brandable Static Site</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;700&family=Outfit:wght@400;500;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="assets/css/theme.css">
+    <link rel="stylesheet" href="assets/css/style.css">
+    <link rel="stylesheet" href="assets/css/animations.css">
+    <link rel="stylesheet" href="assets/css/responsive.css">
+    <!-- Firebase SDKs -->
+    <script src="https://www.gstatic.com/firebasejs/9.6.1/firebase-app-compat.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/9.6.1/firebase-firestore-compat.js"></script>
+</head>
+<body>
+    <a href="#main-content" class="skip-link">Skip to main content</a>
+    <header>
+        <div class="nav-container">
+            <a href="index.html" class="logo">BrandName</a>
+            <button class="nav-toggle" id="navToggle" aria-label="Toggle navigation" aria-expanded="false" aria-controls="navLinks">
+                <span class="icon-bar"></span>
+                <span class="icon-bar"></span>
+                <span class="icon-bar"></span>
+            </button>
+            <nav class="nav-links-container" id="navLinks" aria-label="Main navigation">
+                <button class="nav-close-btn" aria-label="Close navigation">&times;</button>
+                <ul>
+                    <li><a href="index.html" class="nav-link active-link">Home</a></li>
+                    <li><a href="about.html" class="nav-link">About Us</a></li>
+                    <li><a href="services.html" class="nav-link">Services</a></li>
+                    <li><a href="blog.html" class="nav-link">Blog</a></li>
+                    <li><a href="contact.html" class="nav-link">Contact Us</a></li>
+                </ul>
+                <button id="mobileNavThemeToggle" class="button theme-toggle-btn mobile-only-theme-toggle">Switch Theme</button>
+            </nav>
+        </div>
+    </header>
+
+    <main id="main-content">
+        <section id="hero">
+            <div class="hero-background-placeholder"></div>
+            <div class="hero-content">
+                <h1>Welcome to Our Company!</h1>
+                <p>We are dedicated to providing the best service possible.</p>
+                <a href="services.html" class="button hero-cta-button">Learn More</a>
+            </div>
+        </section>
+
+        <!-- Introduction Section -->
+        <section id="introduction" class="animate-on-scroll">
+            <h2 id="intro-title">Introduction Title</h2>
+            <img id="intro-image" src="assets/images/placeholder-intro.jpg" alt="Placeholder for introduction">
+            <p id="intro-text">Placeholder introductory text about the company or its mission. This content will be populated by JavaScript from company-data.json.</p>
+        </section>
+
+        <!-- Featured Services Section -->
+        <section id="featured-services" class="animate-on-scroll">
+            <h2 id="featured-services-title">Featured Services Title</h2>
+            <p id="featured-services-intro-text">Brief overview of featured services. This text will be populated by JavaScript.</p>
+            <div id="featured-services-list" class="featured-services-grid">
+                <!-- Featured service items will be populated here by JavaScript -->
+            </div>
+        </section>
+
+        <section id="key-features" class="animate-on-scroll">
+            <h2>Key Features & Strengths</h2>
+            <div class="bento-grid">
+                <!-- Bento items will be populated by JS -->
+            </div>
+        </section>
+
+        <!-- New Call to Action Bar Section -->
+        <section id="home-cta-bar" class="cta-bar-section animate-on-scroll">
+            <div class="cta-bar-content">
+                <h2 id="home-cta-bar-title">Ready to Take the Next Step?</h2>
+                <p id="home-cta-bar-text">Join us today and discover the difference.</p>
+                <a href="contact.html" class="button cta-bar-button" id="home-cta-bar-button">Get Started</a>
+            </div>
+        </section>
+
+        <section id="about-teaser">
+            <div class="about-teaser-container">
+                <div class="about-teaser-image-col animate-on-scroll animate-slide-in-left">
+                    <img src="assets/images/placeholder-about-teaser.jpg" alt="About us preview">
+                </div>
+                <div class="about-teaser-text-col animate-on-scroll animate-slide-in-right">
+                    <h2>About Us Teaser Title</h2>
+                    <p>Teaser text about the company. This will be populated by JS.</p>
+                    <a href="about.html" class="button about-teaser-button">Learn More</a>
+                </div>
+            </div>
+        </section>
+
+        <section id="testimonials" class="animate-on-scroll">
+            <h2>What Our Clients Say</h2>
+            <div class="testimonial-slider-container">
+                <div class="testimonial-track">
+                    <!-- Testimonial cards will be populated here by JS -->
+                </div>
+                <button class="slider-nav prev-slide" aria-label="Previous testimonial">&lt;</button>
+                <button class="slider-nav next-slide" aria-label="Next testimonial">&gt;</button>
+            </div>
+        </section>
+
+        <!-- New Latest Blog Posts Teaser Section -->
+        <section id="latest-blog-teaser" class="latest-posts-teaser-section animate-on-scroll">
+            <h2 id="latest-blog-teaser-title">From Our Blog</h2>
+            <div id="latest-blog-posts-container" class="blog-posts-grid">
+                <!-- Blog post summaries will be populated here by JS -->
+            </div>
+            <a href="blog.html" class="button view-all-posts-button" id="latest-blog-teaser-viewall">View All Posts</a>
+        </section>
+    </main>
+
+    <footer>
+        <div class="footer-container">
+            <div class="footer-main-content">
+                <div class="footer-column" id="footerBrandColumn">
+                     <a href="index.html" class="logo footer-logo">BrandName</a>
+                     <p class="footer-copyright-text">&copy; 2024 Company Name. All rights reserved.</p>
+                </div>
+                <div class="footer-column" id="footerLinksColumn">
+                    <h4>Quick Links</h4>
+                    <ul>
+                        <li><a href="index.html">Home</a></li>
+                        <li><a href="about.html">About Us</a></li>
+                        <li><a href="services.html">Services</a></li>
+                        <li><a href="blog.html">Blog</a></li>
+                        <li><a href="contact.html">Contact Us</a></li>
+                    </ul>
+                </div>
+                <div class="footer-column" id="footerContactColumn">
+                    <h4>Get in Touch</h4>
+                    <div id="footerContactDetails">
+                        <!-- Contact details will be populated here by JS -->
+                    </div>
+                    <div id="footerSocialMedia">
+                        <!-- Social media links will be populated here by JS -->
+                    </div>
+                </div>
+            </div>
+            <div class="footer-bottom-bar">
+                <button id="themeToggleButton" class="button theme-toggle-btn">Switch to Dark Mode</button>
+                <p><a href="#top">Back to top</a></p>
+            </div>
+        </div>
+    </footer>
+
+    <script src="assets/js/main.js"></script>
+    <script src="assets/js/theme-switcher.js"></script>
+    <script src="assets/js/navigation.js"></script>
+    <script src="assets/js/animations.js"></script>
+    <script src="assets/js/testimonial-slider.js"></script>
+</body>
+</html>

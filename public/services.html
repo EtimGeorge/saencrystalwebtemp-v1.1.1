@@ -1,0 +1,157 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="description" content="Discover the range of services we offer to help your business grow.">
+    <title>Services - Brandable Static Site</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;700&family=Outfit:wght@400;500;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="assets/css/theme.css">
+    <link rel="stylesheet" href="assets/css/style.css">
+    <link rel="stylesheet" href="assets/css/animations.css">
+    <link rel="stylesheet" href="assets/css/responsive.css">
+    <!-- Firebase SDKs -->
+    <script src="https://www.gstatic.com/firebasejs/9.6.1/firebase-app-compat.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/9.6.1/firebase-firestore-compat.js"></script>
+</head>
+<body>
+    <header>
+        <div class="nav-container">
+            <a href="index.html" class="logo">BrandName</a>
+            <button class="nav-toggle" id="navToggle" aria-label="Toggle navigation" aria-expanded="false" aria-controls="navLinks">
+                <span class="icon-bar"></span>
+                <span class="icon-bar"></span>
+                <span class="icon-bar"></span>
+            </button>
+            <nav class="nav-links-container" id="navLinks" aria-label="Main navigation">
+                <button class="nav-close-btn" aria-label="Close navigation">&times;</button>
+                <ul>
+                    <li><a href="index.html" class="nav-link">Home</a></li>
+                    <li><a href="about.html" class="nav-link">About Us</a></li>
+                    <li><a href="services.html" class="nav-link active-link">Services</a></li>
+                    <li><a href="blog.html" class="nav-link">Blog</a></li>
+                    <li><a href="contact.html" class="nav-link">Contact Us</a></li>
+                </ul>
+                <button id="mobileNavThemeToggle" class="button theme-toggle-btn mobile-only-theme-toggle">Switch Theme</button>
+            </nav>
+        </div>
+    </header>
+
+    <main>
+        <section id="services-introduction" class="animate-on-scroll">
+            <h1 id="services-page-title">Our Services</h1>
+            <p id="services-intro-text">Explore the comprehensive list of services we provide, tailored to meet your needs.</p>
+        </section>
+
+        <section id="service-list" class="animate-on-scroll">
+            <h2 id="service-categories-title">Service Categories</h2>
+            <div id="service-items-container" class="services-grid">
+                <!-- Service items will be dynamically populated here by JS -->
+            </div>
+        </section>
+
+        <section id="services-our-approach" class="animate-on-scroll">
+            <h2 id="services-approach-title">Our Service Approach</h2>
+            <p id="services-approach-main-text">We believe in a collaborative and transparent approach to service delivery. Our process typically involves understanding your unique needs, crafting a tailored strategy, implementing with precision, and providing ongoing support to ensure your success.</p>
+            <div id="services-approach-steps-container" class="approach-steps" style="margin-top: var(--space-md); display: flex; flex-wrap: wrap; gap: var(--space-md);">
+                <!-- Approach steps will be populated here by JS -->
+                <div class="approach-step" style="flex: 1; min-width: 200px; background-color: var(--background-color); padding: var(--space-sm); border-radius: 4px; border: 1px solid var(--border-color);">
+                    <h4>1. Discovery & Analysis</h4>
+                    <p class="text-small">Understanding your goals and challenges.</p>
+                </div>
+            </div>
+        </section>
+
+        <section id="services-why-choose-us" class="animate-on-scroll">
+            <h2 id="services-why-title">Why Choose Our Services?</h2>
+            <p id="services-why-main-text">Partnering with us means benefiting from our commitment to quality, innovation, and client satisfaction. We strive to exceed expectations and deliver tangible results.</p>
+            <div id="services-differentiators-container" class="differentiators-grid" style="display: grid; grid-template-columns: repeat(auto-fit, minmax(250px, 1fr)); gap: var(--space-lg); margin-top: var(--space-md);">
+                <!-- Differentiator items will be populated here by JS -->
+                 <div class="differentiator-item">
+                    <h4>Expert Team</h4>
+                    <p class="text-small">Our professionals bring years of experience and specialized knowledge to every project.</p>
+                </div>
+            </div>
+        </section>
+
+        <section id="services-benefits" class="animate-on-scroll">
+            <h2 id="services-benefits-title">Benefits You Can Expect</h2>
+            <p id="services-benefits-main-text">Our services are designed to provide significant advantages, helping you achieve your strategic goals efficiently and effectively.</p>
+            <ul id="services-benefits-list-container" style="list-style-position: inside; padding-left: var(--space-sm); margin-top: var(--space-md);">
+                <!-- Benefit items will be populated here by JS -->
+                <li>Increased efficiency and productivity.</li>
+            </ul>
+        </section>
+
+        <section id="services-case-studies-teaser" class="animate-on-scroll">
+            <h2 id="services-casestudies-title">Success in Action</h2>
+            <p id="services-casestudies-main-text">Explore how we've helped businesses like yours achieve remarkable results. While full case studies are not yet available on this page, our commitment to client success is unwavering.</p>
+            <div style="text-align: center; margin-top: var(--space-md);">
+                <img id="services-casestudies-image" src="assets/images/placeholder-case-study.jpg" alt="Placeholder for a case study graph or visual" style="max-width: 400px; border-radius: 8px;">
+                <p id="services-casestudies-caption" class="text-small" style="margin-top: var(--space-sm);"><em>Placeholder for a future case study highlight.</em></p>
+            </div>
+        </section>
+
+        <section id="services-faq" class="animate-on-scroll">
+            <h2 id="services-faq-title">Services FAQ</h2>
+            <p id="services-faq-main-text">Here are answers to some frequently asked questions about our services. For more specific inquiries, please don't hesitate to contact us.</p>
+            <div id="services-faq-list-container">
+                <!-- FAQ items will be populated here by JS -->
+                <div class="faq-item" style="margin-top: var(--space-md);">
+                    <h4>How do I get started with your services?</h4>
+                    <p class="text-small">Getting started is easy! Simply reach out to us through our contact page with your requirements, and one of our consultants will get in touch to discuss your project.</p>
+                </div>
+            </div>
+        </section>
+
+        <section id="services-cta-quote" class="animate-on-scroll">
+            <h2 id="services-ctaquote-title">Need a Tailored Solution?</h2>
+            <p id="services-ctaquote-main-text">Every business is unique. If you're looking for a service package customized to your specific challenges and goals, we're here to help. Let's discuss how we can create the perfect solution for you.</p>
+            <div style="text-align: center; margin-top: var(--space-lg);">
+                <a href="contact.html" class="button" id="services-ctaquote-button">Request a Custom Quote</a>
+            </div>
+        </section>
+    </main>
+
+    <footer>
+        <div class="footer-container">
+            <div class="footer-main-content">
+                <div class="footer-column" id="footerBrandColumn">
+                     <a href="index.html" class="logo footer-logo">BrandName</a>
+                     <p class="footer-copyright-text">&copy; 2024 Company Name. All rights reserved.</p>
+                </div>
+                <div class="footer-column" id="footerLinksColumn">
+                    <h4>Quick Links</h4>
+                    <ul>
+                        <li><a href="index.html">Home</a></li>
+                        <li><a href="about.html">About Us</a></li>
+                        <li><a href="services.html">Services</a></li>
+                        <li><a href="blog.html">Blog</a></li>
+                        <li><a href="contact.html">Contact Us</a></li>
+                    </ul>
+                </div>
+                <div class="footer-column" id="footerContactColumn">
+                    <h4>Get in Touch</h4>
+                    <div id="footerContactDetails">
+                        <!-- Contact details will be populated here by JS -->
+                    </div>
+                    <div id="footerSocialMedia">
+                        <!-- Social media links will be populated here by JS -->
+                    </div>
+                </div>
+            </div>
+            <div class="footer-bottom-bar">
+                <button id="themeToggleButton" class="button theme-toggle-btn">Switch to Dark Mode</button>
+                <p><a href="#top">Back to top</a></p>
+            </div>
+        </div>
+    </footer>
+
+    <script src="assets/js/main.js"></script>
+    <script src="assets/js/theme-switcher.js"></script>
+    <script src="assets/js/navigation.js"></script>
+    <script src="assets/js/animations.js"></script>
+</body>
+</html>

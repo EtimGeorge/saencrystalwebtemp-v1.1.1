@@ -1,0 +1,153 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="description" content="Read our latest articles, news, and insights.">
+    <title>Blog - Brandable Static Site</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;700&family=Outfit:wght@400;500;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="assets/css/theme.css">
+    <link rel="stylesheet" href="assets/css/style.css">
+    <link rel="stylesheet" href="assets/css/animations.css">
+    <link rel="stylesheet" href="assets/css/responsive.css">
+    <!-- Firebase SDKs -->
+    <script src="https://www.gstatic.com/firebasejs/9.6.1/firebase-app-compat.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/9.6.1/firebase-firestore-compat.js"></script>
+</head>
+<body>
+    <header>
+        <div class="nav-container">
+            <a href="index.html" class="logo">BrandName</a>
+            <button class="nav-toggle" id="navToggle" aria-label="Toggle navigation" aria-expanded="false" aria-controls="navLinks">
+                <span class="icon-bar"></span>
+                <span class="icon-bar"></span>
+                <span class="icon-bar"></span>
+            </button>
+            <nav class="nav-links-container" id="navLinks" aria-label="Main navigation">
+                <button class="nav-close-btn" aria-label="Close navigation">&times;</button>
+                <ul>
+                    <li><a href="index.html" class="nav-link">Home</a></li>
+                    <li><a href="about.html" class="nav-link">About Us</a></li>
+                    <li><a href="services.html" class="nav-link">Services</a></li>
+                    <li><a href="blog.html" class="nav-link active-link">Blog</a></li>
+                    <li><a href="contact.html" class="nav-link">Contact Us</a></li>
+                </ul>
+                <button id="mobileNavThemeToggle" class="button theme-toggle-btn mobile-only-theme-toggle">Switch Theme</button>
+            </nav>
+        </div>
+    </header>
+
+    <main>
+        <section id="blog-header" class="animate-on-scroll">
+            <h1>Our Blog</h1>
+            <p>Stay updated with our latest news, articles, and insights.</p>
+        </section>
+
+        <section id="blog-posts-list" class="animate-on-scroll">
+            <h2>Latest Posts</h2>
+            <div id="blog-item-container" class="blog-posts-grid">
+                 <!-- Blog post summaries will be dynamically populated here by JS -->
+            </div>
+        </section>
+
+        <section id="featured-post-spotlight" class="animate-on-scroll">
+            <h2 id="blog-featured-post-title">Featured Post Spotlight</h2>
+            <!-- Content for a single featured post, e.g., its title, a snippet, and link -->
+            <article class="featured-post-content">
+                <h3 id="blog-featured-post-article-title">Featured Article Title</h3>
+                <p id="blog-featured-post-text">A short teaser or key takeaway from the featured post will appear here. This content is managed from the admin panel.</p>
+                <a href="#" id="blog-featured-post-link" class="button">Read Featured Post</a>
+            </article>
+        </section>
+
+        <section id="blog-categories-overview" class="animate-on-scroll">
+            <h2 id="blog-categories-title">Explore by Category</h2>
+            <p id="blog-categories-intro">Discover articles based on your interests. Our posts cover a wide range of topics.</p>
+            <div id="blog-categories-list" class="categories-list-placeholder">
+                <!-- Placeholder for category links or text. Actual links can be managed as plain text or simple list -->
+                <p id="blog-categories-placeholder-text">Category links or descriptive text about categories will appear here.</p>
+                <!-- Example: <a href="#">Category 1</a> <a href="#">Category 2</a> -->
+            </div>
+        </section>
+
+        <section id="author-spotlight-blog" class="animate-on-scroll">
+            <h2 id="blog-author-spotlight-title">Meet Our Authors</h2>
+            <div class="author-spotlight-content" style="display: flex; gap: 1rem; align-items: center;">
+                <img id="blog-author-spotlight-image" src="assets/images/placeholder-team-member.png" alt="Author spotlight image" style="width:150px; height:150px; border-radius:50%; object-fit:cover;">
+                <div class="author-spotlight-text">
+                    <p id="blog-author-spotlight-text">Our authors are passionate experts in their fields, dedicated to bringing you insightful and engaging content. Learn more about their contributions.</p>
+                </div>
+            </div>
+        </section>
+
+        <section id="blog-archives-link" class="animate-on-scroll">
+            <h2 id="blog-archives-title">Looking for Older Posts?</h2>
+            <p id="blog-archives-text">Dive into our archives to explore a wealth of knowledge and insights from past publications.</p>
+            <a href="#" id="blog-archives-button" class="button">Visit Archives (Placeholder)</a>
+        </section>
+
+        <section id="blog-subscribe-cta" class="animate-on-scroll cta-bar-section">
+             <div class="cta-bar-content">
+                <h2 id="blog-subscribe-title">Stay Updated!</h2>
+                <p id="blog-subscribe-text">Don't miss out on our latest articles and news. Subscribe to our newsletter.</p>
+                <!-- Placeholder for a form or a link to a subscription page -->
+                <div id="blog-subscribe-form-placeholder">
+                    <p id="blog-subscribe-placeholder-text">(Subscription form or link will appear here)</p>
+                    <a href="contact.html?subject=Blog%20Subscription" class="button cta-bar-button">Subscribe Now</a>
+                </div>
+            </div>
+        </section>
+
+        <section id="related-topics-blog" class="animate-on-scroll">
+            <h2 id="blog-related-topics-title">Related Topics</h2>
+            <p id="blog-related-topics-intro">If you enjoyed our blog, you might also be interested in these related areas or services we offer.</p>
+            <div id="blog-related-topics-list">
+                <!-- Placeholder for links or text about related topics -->
+                <p id="blog-related-topics-placeholder-text">(Links or text about related topics/services will appear here)</p>
+                 <!-- Example: <a href="services.html">Our Services</a> -->
+            </div>
+        </section>
+    </main>
+
+    <footer>
+        <div class="footer-container">
+            <div class="footer-main-content">
+                <div class="footer-column" id="footerBrandColumn">
+                     <a href="index.html" class="logo footer-logo">BrandName</a>
+                     <p class="footer-copyright-text">&copy; 2024 Company Name. All rights reserved.</p>
+                </div>
+                <div class="footer-column" id="footerLinksColumn">
+                    <h4>Quick Links</h4>
+                    <ul>
+                        <li><a href="index.html">Home</a></li>
+                        <li><a href="about.html">About Us</a></li>
+                        <li><a href="services.html">Services</a></li>
+                        <li><a href="blog.html">Blog</a></li>
+                        <li><a href="contact.html">Contact Us</a></li>
+                    </ul>
+                </div>
+                <div class="footer-column" id="footerContactColumn">
+                    <h4>Get in Touch</h4>
+                    <div id="footerContactDetails">
+                        <!-- Contact details will be populated here by JS -->
+                    </div>
+                    <div id="footerSocialMedia">
+                        <!-- Social media links will be populated here by JS -->
+                    </div>
+                </div>
+            </div>
+            <div class="footer-bottom-bar">
+                <button id="themeToggleButton" class="button theme-toggle-btn">Switch to Dark Mode</button>
+                <p><a href="#top">Back to top</a></p>
+            </div>
+        </div>
+    </footer>
+
+    <script src="assets/js/main.js"></script>
+    <script src="assets/js/theme-switcher.js"></script>
+    <script src="assets/js/navigation.js"></script>
+    <script src="assets/js/animations.js"></script>
+</body>
+</html>

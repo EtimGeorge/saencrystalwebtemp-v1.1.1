@@ -1,0 +1,172 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="description" content="Get in touch with us. We are here to answer your questions.">
+    <title>Contact Us - Brandable Static Site</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;700&family=Outfit:wght@400;500;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="assets/css/theme.css">
+    <link rel="stylesheet" href="assets/css/style.css">
+    <link rel="stylesheet" href="assets/css/animations.css">
+    <link rel="stylesheet" href="assets/css/responsive.css">
+    <!-- Firebase SDKs -->
+    <script src="https://www.gstatic.com/firebasejs/9.6.1/firebase-app-compat.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/9.6.1/firebase-firestore-compat.js"></script>
+</head>
+<body>
+    <header>
+        <div class="nav-container">
+            <a href="index.html" class="logo">BrandName</a>
+            <button class="nav-toggle" id="navToggle" aria-label="Toggle navigation" aria-expanded="false" aria-controls="navLinks">
+                <span class="icon-bar"></span>
+                <span class="icon-bar"></span>
+                <span class="icon-bar"></span>
+            </button>
+            <nav class="nav-links-container" id="navLinks" aria-label="Main navigation">
+                <button class="nav-close-btn" aria-label="Close navigation">&times;</button>
+                <ul>
+                    <li><a href="index.html" class="nav-link">Home</a></li>
+                    <li><a href="about.html" class="nav-link">About Us</a></li>
+                    <li><a href="services.html" class="nav-link">Services</a></li>
+                    <li><a href="blog.html" class="nav-link">Blog</a></li>
+                    <li><a href="contact.html" class="nav-link active-link">Contact Us</a></li>
+                </ul>
+                <button id="mobileNavThemeToggle" class="button theme-toggle-btn mobile-only-theme-toggle">Switch Theme</button>
+            </nav>
+        </div>
+    </header>
+
+    <main>
+        <section id="contact-header" class="animate-on-scroll">
+            <h1 id="contact-page-title">Contact Us</h1>
+            <p id="contact-intro-text">We'd love to hear from you! Please use the form or our contact details below.</p>
+        </section>
+
+        <div class="contact-page-columns-container">
+            <section id="contact-details-column" class="animate-on-scroll">
+                <h2 id="contact-info-title">Our Contact Details</h2>
+                <address id="contact-address-block">
+                    <!-- This address block will be populated by JS -->
+                    Company Name<br>
+                    123 Main Street<br>
+                    Anytown, USA 12345<br>
+                    Email: <a href="mailto:info@example.com">info@example.com</a><br>
+                    Phone: <a href="tel:+1234567890">(123) 456-7890</a>
+                </address>
+                <div id="map-container" class="animate-on-scroll">
+                    <div class="map-placeholder">
+                        <!-- Map placeholder text will be populated by JS -->
+                        Google Map Embed Placeholder
+                    </div>
+                </div>
+            </section>
+
+            <section id="contact-form-column" class="animate-on-scroll">
+                <h2 id="contact-form-title">Send Us a Message</h2>
+                <form id="contactForm" method="POST" data-netlify="true" name="contact">
+                    <!-- Netlify Honeypot field -->
+                    <p class="hidden" style="display:none;">
+                        <label>Don’t fill this out if you’re human: <input name="bot-field"></label>
+                    </p>
+                    <div>
+                        <label for="name">Full Name:</label>
+                        <input type="text" id="name" name="name" required>
+                    </div>
+                    <div>
+                        <label for="email">Email Address:</label>
+                        <input type="email" id="email" name="email" required>
+                    </div>
+                    <div>
+                        <label for="subject">Subject:</label>
+                        <input type="text" id="subject" name="subject">
+                    </div>
+                    <div>
+                        <label for="message">Message:</label>
+                        <textarea id="message" name="message" rows="5" required></textarea>
+                    </div>
+                    <button type="submit">Send Message</button>
+                </form>
+            </section>
+        </div>
+
+        <section id="contact-office-hours" class="animate-on-scroll">
+            <h2 id="contact-office-hours-title">Our Office Hours</h2>
+            <p id="contact-office-hours-text">Placeholder: Our team is available to assist you during the following hours. We strive to respond to all inquiries promptly.</p>
+        </section>
+
+        <section id="contact-response-expectations" class="animate-on-scroll">
+            <h2 id="contact-response-title">Response Expectations</h2>
+            <p id="contact-response-text">Placeholder: We typically respond to inquiries within 24-48 business hours. For urgent matters, please call us directly.</p>
+        </section>
+
+        <section id="contact-social-connect" class="animate-on-scroll">
+            <h2 id="contact-social-title">Connect With Us</h2>
+            <p id="contact-social-intro">Placeholder: Follow us on our social media channels to stay updated with our latest news and activities.</p>
+            <ul id="contact-social-links-container" class="social-links-list" style="list-style: none; padding: 0; display: flex; gap: 1rem; justify-content: center; margin-top: 1rem;">
+                <!-- Social links will be populated here by JS -->
+                <li><a href="#">Platform 1</a></li>
+            </ul>
+        </section>
+
+        <section id="contact-location-highlights" class="animate-on-scroll">
+            <h2 id="contact-location-title">Location Highlights</h2>
+            <p id="contact-location-text">Placeholder: Our office is conveniently located with ample parking and accessibility options. We look forward to your visit.</p>
+        </section>
+
+        <section id="contact-faqs" class="animate-on-scroll">
+            <h2 id="contact-faqs-title">Contact FAQs</h2>
+            <p id="contact-faqs-intro">Placeholder: Have a quick question? Check our FAQs below before reaching out.</p>
+            <div id="contact-faqs-list-container">
+                <!-- FAQ items will be populated here by JS -->
+                <div class="faq-item" style="margin-top: var(--space-md);">
+                    <h4>Placeholder: What is the best way to reach you?</h4>
+                    <p class="text-small">Placeholder: For general inquiries, the contact form or email is preferred. For urgent support, please call.</p>
+                </div>
+            </div>
+        </section>
+
+    </main>
+
+    <footer>
+        <div class="footer-container">
+            <div class="footer-main-content">
+                <div class="footer-column" id="footerBrandColumn">
+                     <a href="index.html" class="logo footer-logo">BrandName</a>
+                     <p class="footer-copyright-text">&copy; 2024 Company Name. All rights reserved.</p>
+                </div>
+                <div class="footer-column" id="footerLinksColumn">
+                    <h4>Quick Links</h4>
+                    <ul>
+                        <li><a href="index.html">Home</a></li>
+                        <li><a href="about.html">About Us</a></li>
+                        <li><a href="services.html">Services</a></li>
+                        <li><a href="blog.html">Blog</a></li>
+                        <li><a href="contact.html">Contact Us</a></li>
+                    </ul>
+                </div>
+                <div class="footer-column" id="footerContactColumn">
+                    <h4>Get in Touch</h4>
+                    <div id="footerContactDetails">
+                        <!-- Contact details will be populated here by JS -->
+                    </div>
+                    <div id="footerSocialMedia">
+                        <!-- Social media links will be populated here by JS -->
+                    </div>
+                </div>
+            </div>
+            <div class="footer-bottom-bar">
+                <button id="themeToggleButton" class="button theme-toggle-btn">Switch to Dark Mode</button>
+                <p><a href="#top">Back to top</a></p>
+            </div>
+        </div>
+    </footer>
+
+    <script src="assets/js/main.js"></script>
+    <script src="assets/js/theme-switcher.js"></script>
+    <script src="assets/js/navigation.js"></script>
+    <script src="assets/js/animations.js"></script>
+</body>
+</html>
